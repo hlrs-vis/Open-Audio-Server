@@ -52,9 +52,8 @@ bool SocketHandler::initialize(long int listeningPort)
     // Initialize condition variables
     pthread_condattr_t inCondAttr;
     pthread_condattr_init(&inCondAttr);
+#ifdef __linux__
     // Have the inCondition use the monotonic clock, for pthread_condtimedwait()
-
-#ifndef WIN32
     pthread_condattr_setclock(&inCondAttr, CLOCK_MONOTONIC);
 #endif
 

@@ -36,8 +36,8 @@ ServerWindowTable::ServerWindowTable(int X, int Y, int W, int H, const char *L,
     // Initialize condition variable
     pthread_condattr_t queueConditionAttr;
     pthread_condattr_init(&queueConditionAttr);
+#ifdef __linux__
     // Have the queueCondition use the monotonic clock, for pthread_condtimedwait()
-#ifndef WIN32
     pthread_condattr_setclock(&queueConditionAttr, CLOCK_MONOTONIC);
 #endif
 
