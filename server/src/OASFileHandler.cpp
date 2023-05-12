@@ -6,8 +6,8 @@
 
 #include "OASFileHandler.h"
 #include <stdio.h>
-#include <mxml-private.h>
-#ifdef WIN32#include <sys/stat.h>
+
+#ifdef WIN32
 #ifndef _S_ISTYPE
 #define _S_ISTYPE(mode, mask)  (((mode) & _S_IFMT) == (mask))
 #define S_ISREG(mode) _S_ISTYPE((mode), _S_IFREG)
@@ -197,8 +197,9 @@ bool FileHandler::findXML(const char *name, const char *attr, const char *value,
 
     if (node)
     {
-        if (node->child && node->child->value.opaque)
-            output = node->child->value.opaque;
+        if (mxml_node_t *child = mxmlGetFirstChild(node)) {
+            output = mxmlGetOpaque(child);
+        }
 
         return true;
     }
