@@ -44,7 +44,7 @@ public:
 	 */
     inline void update(const ClockType clockToUse)
     {
-        clock_gettime(clockToUse, &_time);
+        clock_gettime((clockid_t)clockToUse, &_time);
     }
 
     /**
