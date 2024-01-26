@@ -5,6 +5,15 @@
  */
 
 #include "OASFileHandler.h"
+#include <stdio.h>
+#include <mxml-private.h>
+#ifdef WIN32#include <sys/stat.h>
+#ifndef _S_ISTYPE
+#define _S_ISTYPE(mode, mask)  (((mode) & _S_IFMT) == (mask))
+#define S_ISREG(mode) _S_ISTYPE((mode), _S_IFREG)
+#define S_ISDIR(mode) _S_ISTYPE((mode), _S_IFDIR)
+#endif
+#endif
 
 using namespace oas;
 

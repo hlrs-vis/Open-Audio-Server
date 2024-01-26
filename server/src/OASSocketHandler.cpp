@@ -5,6 +5,13 @@
  */
 
 #include "OASSocketHandler.h"
+#ifdef WIN32
+#define MAXHOSTNAMELEN 128
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+#include <ws2tcpip.h>
+#else
+#define closesocket close
+#endif
 
 using namespace oas;
 
@@ -46,7 +53,10 @@ bool SocketHandler::initialize(long int listeningPort)
     pthread_condattr_t inCondAttr;
     pthread_condattr_init(&inCondAttr);
     // Have the inCondition use the monotonic clock, for pthread_condtimedwait()
+
+#ifndef WIN32
     pthread_condattr_setclock(&inCondAttr, CLOCK_MONOTONIC);
+#endif
 
     pthread_cond_init(&SocketHandler::_inCondition, &inCondAttr);
     pthread_cond_init(&SocketHandler::_outCondition, NULL);
@@ -74,7 +84,7 @@ bool SocketHandler::initialize(long int listeningPort)
     if (threadError)
     {
         oas::Logger::errorf("SocketHandler - Failed to create the socket thread.");
-        close(SocketHandler::_socketHandle);
+        closesocket(SocketHandler::_socketHandle);
         return false;
     }
 
@@ -121,7 +131,11 @@ bool SocketHandler::_openSocket()
         return false;
     }
 
+#ifdef WIN32
+    char enableReuse = 1;
+#else
     int enableReuse = 1;
+#endif
 
     // Set socket option SO_REUSEADDR - lets the server reuse the port if there is a disconnect
     if (-1 == setsockopt( SocketHandler::_socketHandle, 
@@ -131,7 +145,7 @@ bool SocketHandler::_openSocket()
                           sizeof(enableReuse)))
     {
         oas::Logger::error("SocketHandler - Failed to set the socket as reusable");
-        close(SocketHandler::_socketHandle);
+        closesocket(SocketHandler::_socketHandle);
         return false;
     }
 
@@ -149,7 +163,7 @@ bool SocketHandler::_openSocket()
                     sizeof(SocketHandler::_stSockAddr)))
     {
         oas::Logger::error("SocketHandler - Failed to bind socket to address");
-        close(SocketHandler::_socketHandle);
+        closesocket(SocketHandler::_socketHandle);
         return false;
     }
     
@@ -157,7 +171,7 @@ bool SocketHandler::_openSocket()
     if (-1 == listen(SocketHandler::_socketHandle, 1))
     {
         oas::Logger::error("SocketHandler - Failed to listen on socket");
-        close(SocketHandler::_socketHandle);
+        closesocket(SocketHandler::_socketHandle);
         return false;
     }
 
@@ -192,7 +206,7 @@ void SocketHandler::_closeSocket()
         return;
     }
 
-    close(SocketHandler::_socketHandle);
+    closesocket(SocketHandler::_socketHandle);
     SocketHandler::_isSocketOpen = false;
 
     // Empty the incoming and outgoing queues
@@ -253,7 +267,7 @@ void SocketHandler::_closeConnection(const int connection)
 {
     oas::Logger::logf("SocketHandler - Closing connection with client.");
     // Close the connection - causes client to disconnect
-    close(connection);
+    closesocket(connection);
     // Close the socket
     SocketHandler::_closeSocket();
     // Then finally add the QUIT message
@@ -320,7 +334,11 @@ void* SocketHandler::_socketLoop(void* parameter)
             bzero(bufPtr, MAX_TRANSMIT_BUFFER_SIZE);
 
             // Read from the socket
+#ifdef WIN32
+            amountRead = recv(connection, bufPtr, MAX_TRANSMIT_BUFFER_SIZE,0);
+#else
             amountRead = read(connection, bufPtr, MAX_TRANSMIT_BUFFER_SIZE);
+#endif
 
             // Error occured
             if (-1 == amountRead)
@@ -404,7 +422,11 @@ void* SocketHandler::_socketLoop(void* parameter)
                         char *response = SocketHandler::_getNextOutgoingResponse();
 
                         // write the response to the socket connection
+#ifdef WIN32
+                        amountWritten = send(connection, response, strlen(response),0);
+#else
                         amountWritten = write(connection, response, strlen(response));
+#endif
                         if (-1 == amountWritten)
                         {
                             oas::Logger::errorf("SocketHandler - Error occurred writing a response to the client.");
@@ -419,7 +441,7 @@ void* SocketHandler::_socketLoop(void* parameter)
         _isConnectedToClient = false;
     }
 
-    close(SocketHandler::_socketHandle);
+    closesocket(SocketHandler::_socketHandle);
     pthread_exit(NULL);
     return NULL;
 }
@@ -445,7 +467,11 @@ void SocketHandler::_receiveBinaryFile(int connection, const Message& ptfi)
 
 	while (bytesLeft > 0)
 	{
-		bytesRead = read(connection, dataPtr, bytesLeft);
+#ifdef WIN32
+		bytesRead = recv(connection, dataPtr, bytesLeft,0);
+#else
+        bytesRead = read(connection, dataPtr, bytesLeft);
+#endif
 
 		if (bytesRead == 0 || bytesRead == -1)
 		{

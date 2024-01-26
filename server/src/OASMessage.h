@@ -11,7 +11,12 @@
 #include <cstring>
 #include <cctype>
 #include <AL/alut.h>
+#ifndef WIN32
 #include <sys/time.h>
+#else
+#include <winsock2.h>
+#include <windows.h>
+#endif
 #include "OASLogger.h"
 
 namespace oas

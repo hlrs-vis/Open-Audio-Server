@@ -1,5 +1,16 @@
 #include "OASServer.h"
+#ifdef WIN32
+#include <windows.h>
+#include <synchapi.h>
+//static void sleep(unsigned int dwMilliseconds) { Sleep(dwMilliseconds); };
+void sleep(unsigned int mseconds)
+{
+    clock_t goal = mseconds + clock();
+    while (goal > clock())
+        ;
+}
 
+#endif
 oas::Server::Server() :
     _audioHandler(oas::AudioHandler::getInstance())
 {
@@ -28,6 +39,14 @@ bool oas::Server::_readConfigFile(int argc, char **argv)
         oas::Logger::logf("Usage: \"%s [config file]\"\n", argv[0]);
         return false;
     }
+#ifdef WIN32
+    WSADATA wsaData;
+
+    if (WSAStartup(0x202, &wsaData) != 0)
+    {
+        printf("ERROR: Initialization failure.\n");
+    }
+#endif
 
     std::string configFilePath(argv[1]);
 

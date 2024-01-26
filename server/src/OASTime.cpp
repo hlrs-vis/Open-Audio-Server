@@ -1,6 +1,25 @@
-#include <OASTime.h>
 
+#ifdef WIN32
+
+#include <WinSock2.h>
+#include <Windows.h>
+#include <time.h>
+#include <sysinfoapi.h>
+
+#endif
+#include <OASTime.h>
 using namespace oas;
+#ifdef WIN32
+
+int oas::clock_gettime(int, struct timespec* spec)      //C-file part
+{
+	__int64 wintime; GetSystemTimeAsFileTime((FILETIME*)&wintime);
+	wintime -= 116444736000000000i64;  //1jan1601 to 1jan1970
+	spec->tv_sec = wintime / 10000000i64;           //seconds
+	spec->tv_nsec = wintime % 10000000i64 * 100;      //nano-seconds
+	return 0;
+}
+#endif
 
 double Time::asDouble() const
 {

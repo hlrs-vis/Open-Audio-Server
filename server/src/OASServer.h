@@ -24,8 +24,9 @@
 #ifdef FLTK_FOUND
 #include <FL/Fl.H>
 #endif
-
+#ifndef WIN32
 #include <unistd.h>
+#endif
 
 
 namespace oas

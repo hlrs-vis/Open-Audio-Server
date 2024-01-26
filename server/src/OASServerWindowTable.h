@@ -10,7 +10,9 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Table.H>
 #include <FL/fl_draw.H>
+#ifndef WIN32
 #include <sys/time.h>
+#endif
 #include <pthread.h>
 #include <map>
 #include <queue>

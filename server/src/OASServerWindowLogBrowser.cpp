@@ -1,5 +1,9 @@
 #include "OASServerWindowLogBrowser.h"
 
+#ifdef WIN32
+
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+#endif
 using namespace oas;
 
 const unsigned int ServerWindowLogBrowser::_kMaxLogLineLength = 1000;

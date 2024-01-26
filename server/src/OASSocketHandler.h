@@ -8,18 +8,22 @@
 
 #include <iostream>
 #include <sys/types.h>
+#ifndef WIN32
 #include <sys/socket.h>
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <unistd.h>
+#else
+#include <winsock2.h>
+#endif
 #include <cstring>
 #include <queue>
 #include <pthread.h>
 #include <AL/alut.h>
 #include <cerrno>
 #include <time.h>
-#include <unistd.h>
 #include <OASTime.h>
 
 #include "OASFileHandler.h"

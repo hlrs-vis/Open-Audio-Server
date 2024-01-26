@@ -76,7 +76,11 @@ void Logger::error(const char *message)
 
     errorNumber = errno;
     // Use strerror_r to get the error string for the errno value
+#ifdef WIN32
+    Logger::errorf("%s: %s", message, strerror(errorNumber));
+#else
     Logger::errorf("%s: %s", message, strerror_r(errorNumber, errBuf, MAX_STRERROR_BUF_SIZE));
+#endif
 }
 
 // public, static

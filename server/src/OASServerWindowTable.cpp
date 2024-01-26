@@ -3,6 +3,11 @@
 #include "OASLogger.h"
 #include <iostream>
 
+#ifdef WIN32
+
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+#endif
+
 using namespace oas;
 
 ServerWindowTable::ServerWindowTable(int X, int Y, int W, int H, const char *L,
@@ -32,7 +37,9 @@ ServerWindowTable::ServerWindowTable(int X, int Y, int W, int H, const char *L,
     pthread_condattr_t queueConditionAttr;
     pthread_condattr_init(&queueConditionAttr);
     // Have the queueCondition use the monotonic clock, for pthread_condtimedwait()
+#ifndef WIN32
     pthread_condattr_setclock(&queueConditionAttr, CLOCK_MONOTONIC);
+#endif
 
     pthread_cond_init(&_queueCondition, &queueConditionAttr);
     pthread_condattr_destroy(&queueConditionAttr);

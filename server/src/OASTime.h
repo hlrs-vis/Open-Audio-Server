@@ -14,6 +14,16 @@ namespace oas
 
 #define OAS_BILLION 1000000000
 
+
+#ifdef WIN32
+#include <windows.h>
+#include <sysinfoapi.h>
+
+//struct timespec { long tv_sec; long tv_nsec; };  
+extern int clock_gettime(int, struct timespec* spec);
+#define CLOCK_MONOTONIC 0
+#define CLOCK_REALTIME 1
+#endif
 class Time
 {
 public:
