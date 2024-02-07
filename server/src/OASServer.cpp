@@ -1,7 +1,10 @@
 #include "OASServer.h"
+#include <sstream>
+
 #ifdef WIN32
 #include <windows.h>
 #include <synchapi.h>
+
 //static void sleep(unsigned int dwMilliseconds) { Sleep(dwMilliseconds); };
 void sleep(unsigned int mseconds)
 {
@@ -9,8 +12,8 @@ void sleep(unsigned int mseconds)
     while (goal > clock())
         ;
 }
-
 #endif
+
 oas::Server::Server() :
     _audioHandler(oas::AudioHandler::getInstance())
 {
@@ -331,17 +334,26 @@ void oas::Server::initialize(int argc, char **argv)
 #endif
     if (!oas::FileHandler::initialize(this->_serverInfo->getCacheDirectory()))
     {
-        _fatalError("Could not initialize the File Handler!");
+        std::stringstream s;
+        s << "Could not initialize the File Handler for cache directory " << this->_serverInfo->getCacheDirectory() << "!";
+        std::string str = s.str();
+        _fatalError(str.c_str());
     }
 
     if (!_audioHandler.initialize(this->_serverInfo->getAudioDeviceString()))
     {
-        _fatalError("Could not initialize the Audio Handler!");
+        std::stringstream s;
+        s << "Could not initialize the Audio Handler for device " << this->_serverInfo->getAudioDeviceString() << "!";
+        std::string str = s.str();
+        _fatalError(str.c_str());
     }
 
     if (!oas::SocketHandler::initialize(this->_serverInfo->getPort()))
     {
-        _fatalError("Could not initialize the Socket Handler!");
+        std::stringstream s;
+        s << "Could not initialize the Socket Handler for port " << this->_serverInfo->getPort() << "!";
+        std::string str = s.str();
+        _fatalError(str.c_str());
     }
 
     // Thread attribute variable
