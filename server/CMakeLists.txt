@@ -27,11 +27,11 @@ SET(EXECUTABLE_OUTPUT_PATH "${OAS_SOURCE_DIR}/build/bin")
 SET(OAS_CMAKEFILES_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
 OPTION(BUILD_GUI "Look for FLTK library, to build GUI components of server" ON)
+OPTION(TOML_CONFIG "Use TOML instead of XML configuration file" ON)
 
 # Find relevant packages
 FIND_PACKAGE(OPENAL REQUIRED)
 FIND_PACKAGE(ALUT REQUIRED)
-FIND_PACKAGE(MXML REQUIRED)
 
 # Find FLTK only if we need to
 IF(BUILD_GUI)
@@ -62,6 +62,15 @@ ENDIF(DOXYGEN_FOUND)
 CONFIGURE_FILE(${OAS_CMAKEFILES_DIRECTORY}/config.h.in
     ${CMAKE_CURRENT_SOURCE_DIR}/src/config.h)
 
+if (TOML_CONFIG)
+    set(PREFIX src/covconfig/)
+    include(src/covconfig/covconfig.cmake)
+    add_definitions(-DCONFIG_NAME="oas")
+else()
+    FIND_PACKAGE(MXML REQUIRED)
+    add_definitions(-DXML_CONFIG)
+endif()
+
 IF(FLTK_FOUND)
     ADD_EXECUTABLE(OAS
         src/OASServer.cpp 
@@ -77,7 +86,8 @@ IF(FLTK_FOUND)
         src/OASServerInfo.cpp 
         src/OASServerWindowLogBrowser.cpp 
         src/OASServerWindowTable.cpp
-        src/OASTime.cpp)
+        src/OASTime.cpp
+        ${COVCONFIG_SOURCES})
     INCLUDE_DIRECTORIES(${FLTK_INCLUDE_DIR})
     TARGET_LINK_LIBRARIES(OAS ${FLTK_LIBRARY})
 ELSE(FLTK_FOUND)
@@ -92,21 +102,26 @@ ELSE(FLTK_FOUND)
         src/OASFileHandler.cpp 
         src/OASMessage.cpp 
         src/OASServerInfo.cpp 
-        src/OASTime.cpp)
+        src/OASTime.cpp
+        ${COVCONFIG_SOURCES})
 ENDIF(FLTK_FOUND)
+
 
 
 
 INCLUDE_DIRECTORIES(src)
 INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${ALUT_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${MXML_INCLUDE_DIR})
 
 TARGET_LINK_LIBRARIES(OAS ${OPENAL_LIBRARY})
 TARGET_LINK_LIBRARIES(OAS ${ALUT_LIBRARY})
-TARGET_LINK_LIBRARIES(OAS ${MXML_LIBRARY})
 if(NOT APPLE)
 TARGET_LINK_LIBRARIES(OAS rt)
+endif()
+
+if(NOT TOML_CONFIG)
+    INCLUDE_DIRECTORIES(${MXML_INCLUDE_DIR})
+    TARGET_LINK_LIBRARIES(OAS ${MXML_LIBRARY})
 endif()
 
 find_package(Threads REQUIRED)

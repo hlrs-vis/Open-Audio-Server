@@ -1,0 +1,3 @@
+[submodule "server/config"]
+	path = server/src/covconfig
+	url = https://github.com/vistle/covconfig.git

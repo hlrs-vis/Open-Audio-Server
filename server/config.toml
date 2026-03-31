@@ -1,0 +1,11 @@
+# move to ~/.config/oas/config.toml and adapt
+ 
+["OAS"]
+# if HOME environment variable is set, defaults to ~/.cache/oas/
+#cache_directory = "/home/oas/.cache/oas/"
+# port for server to listen
+#port = 31231
+# use default audio device
+#audio_device = ""
+# gui is enabled by default
+#gui = true
