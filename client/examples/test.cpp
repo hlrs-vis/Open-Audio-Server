@@ -1,6 +1,7 @@
 #include <OASClient.h>
 #include <iostream>
 #include <unistd.h>
+#include <string>
 
 void processArgsAndInitConnection(int argc, char **argv);
 

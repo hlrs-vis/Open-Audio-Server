@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 
 # Set the build type
 SET(OAS_DEFAULT_CMAKE_BUILD_TYPE RelWithDebInfo)
@@ -73,14 +73,14 @@ SET(TARGET_H
     ${OASCLIENT_SOURCE_DIR}/src/OASClient.h
     ${OASCLIENT_SOURCE_DIR}/src/Sound.h
     ${OASCLIENT_SOURCE_DIR}/src/Listener.h
-    ${OASCLIENT_SOURCE_DIR}/src/Time.h
+    ${OASCLIENT_SOURCE_DIR}/src/OASTime.h
     )
 
 SET(TARGET_SRC
     ${OASCLIENT_SOURCE_DIR}/src/ClientInterface.cpp
     ${OASCLIENT_SOURCE_DIR}/src/Sound.cpp
     ${OASCLIENT_SOURCE_DIR}/src/Listener.cpp
-    ${OASCLIENT_SOURCE_DIR}/src/Time.cpp
+    ${OASCLIENT_SOURCE_DIR}/src/OASTime.cpp
     )
 
 IF(BUILD_WITH_OSG_SUPPORT)
