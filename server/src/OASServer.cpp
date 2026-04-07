@@ -513,11 +513,15 @@ void oas::Server::_atExit() {
 void oas::Server::terminate() { oas::Server::getInstance()._atExit(); }
 
 void *oas::Server::runServer(void *parameter) {
-  return oas::Server::getInstance()._run();
+#ifdef FLTK_FOUND
+  return oas::Server::getInstance()._run(parameter);
+#else
+  return oas::Server::getInstance()._runNoGUI(parameter);
+#endif
 }
 
 void *oas::Server::runServerNoGUI(void *parameter) {
-  return oas::Server::getInstance()._runNoGUI();
+  return oas::Server::getInstance()._runNoGUI(parameter);
 }
 
 // Main
