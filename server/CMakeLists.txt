@@ -71,6 +71,11 @@ else()
     add_definitions(-DXML_CONFIG)
 endif()
 
+if(APPLE)
+    # silence OpenAL deprecation warning
+    add_definitions(-DOPENAL_DEPRECATED=)
+endif()
+
 IF(FLTK_FOUND)
     ADD_EXECUTABLE(OAS
         src/OASServer.cpp 
