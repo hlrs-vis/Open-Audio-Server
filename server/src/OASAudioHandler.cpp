@@ -21,7 +21,7 @@ bool AudioHandler::initialize(std::string const &deviceString)
         if (!alutInitWithoutContext(NULL, NULL))
         {
             ALenum error = alutGetError();
-            oas::Logger::errorf("AudioHandler - %s", alutGetErrorString(error));
+            oas::Logger::errorf("AudioHandler - Failed to init without context: %s", alutGetErrorString(error));
             return false;
         }
 
@@ -51,13 +51,18 @@ bool AudioHandler::initialize(std::string const &deviceString)
             oas::Logger::errorf("AudioHandler - Failed to make context current for device \"%s\"",
                 deviceString.c_str());
             alcDestroyContext(AudioHandler::_context);
+            AudioHandler::_context = NULL;
             alcCloseDevice(AudioHandler::_device);
+            AudioHandler::_device = NULL;
             return false;
         }
     }
     // Else, let ALUT automatically set up our OpenAL context and devices, using defaults
     else
     {
+        AudioHandler::_context = NULL;
+        AudioHandler::_device = NULL;
+
         if (!alutInit(NULL, NULL))
         {
             ALenum error = alutGetError();
@@ -110,17 +115,30 @@ void AudioHandler::release()
     AudioListener::getInstance()->setVelocity(0, 0, 0);
     _setRecentlyModifiedAudioUnit(AudioListener::getInstance());
 
-    if (0 < AudioHandler::_deviceString.length())
+    ALenum error = alutGetError();
+    if (error != AL_NONE)
     {
-        alcMakeContextCurrent(NULL);
+        oas::Logger::logf("AudioHandler error before release - %s", alutGetErrorString(error));
+    }
+    if (AudioHandler::_context)
+    {
+        if (alcMakeContextCurrent(NULL) != ALC_TRUE)
+        {
+            oas::Logger::errorf("AudioHandler - failed to make NULL context current");
+        }
         alcDestroyContext(AudioHandler::_context);
+        AudioHandler::_context = NULL;
+    }
+    if (AudioHandler::_device)
+    {
         alcCloseDevice(AudioHandler::_device);
+        AudioHandler::_device = NULL;
     }
     // Let ALUT do any remaining cleanup to destroy the context
     if (!alutExit())
     {
         ALenum error = alutGetError();
-        oas::Logger::errorf("AudioHandler - %s", alutGetErrorString(error));
+        oas::Logger::errorf("AudioHandler exit - %s", alutGetErrorString(error));
     }
 }
 
