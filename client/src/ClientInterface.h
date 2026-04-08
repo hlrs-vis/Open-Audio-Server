@@ -30,11 +30,13 @@ namespace oasclient
 class ClientInterface
 {
 public:
-
     /**
      * Define an anonymous enum to hold this PACKET_SIZE constant value.
      */
-    enum { PACKET_SIZE = 1024};
+    enum
+    {
+        PACKET_SIZE = 1024
+    };
 
     friend class Sound;
     friend class Listener;
@@ -79,9 +81,7 @@ protected:
 
 private:
     static int _socketFD;
-
 };
 
 }
 #endif // _OAS_CLIENT_INTERFACE_H_
-

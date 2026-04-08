@@ -15,8 +15,8 @@ namespace oas
 {
 class Logger
 {
-#define MAX_LOG_MESSAGE_SIZE    1024
-#define MAX_STRERROR_BUF_SIZE   512
+#define MAX_LOG_MESSAGE_SIZE 1024
+#define MAX_STRERROR_BUF_SIZE 512
 
 public:
     static void logf(const char *message, ...);
@@ -33,4 +33,3 @@ private:
 }
 
 #endif
-

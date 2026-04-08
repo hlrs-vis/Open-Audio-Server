@@ -14,34 +14,33 @@ namespace oas
 
 #define OAS_BILLION 1000000000
 
-
 #ifdef WIN32
 #include <windows.h>
 #include <sysinfoapi.h>
 
-//struct timespec { long tv_sec; long tv_nsec; };  
-extern int clock_gettime(int, struct timespec* spec);
+// struct timespec { long tv_sec; long tv_nsec; };
+extern int clock_gettime(int, struct timespec *spec);
 #define CLOCK_MONOTONIC 0
 #define CLOCK_REALTIME 1
 #endif
 class Time
 {
 public:
+    /**
+     * ClockType defines the types of clocks that can be recorded.
+     *  CLOCK_MONOTONIC: Fast access clock that cannot be modified by programs, monotonic since
+     *  				 some unspecified starting point. Best used for timing intervals.
+     *  CLOCK_REALTIME: System-wide realtime clock that can be set with appropriate privileges.
+     */
+    enum ClockType
+    {
+        OAS_CLOCK_MONOTONIC = CLOCK_MONOTONIC,
+        OAS_CLOCK_REALTIME = CLOCK_REALTIME
+    };
 
-	/**
-	 * ClockType defines the types of clocks that can be recorded.
-	 *  CLOCK_MONOTONIC: Fast access clock that cannot be modified by programs, monotonic since
-	 *  				 some unspecified starting point. Best used for timing intervals.
-	 *  CLOCK_REALTIME: System-wide realtime clock that can be set with appropriate privileges.
-	 */
-	enum ClockType {
-		OAS_CLOCK_MONOTONIC = CLOCK_MONOTONIC,
-		OAS_CLOCK_REALTIME = CLOCK_REALTIME
-	};
-
-	/**
-	 * @brief Update with the value of the current time as recorded by the specified clock
-	 */
+    /**
+     * @brief Update with the value of the current time as recorded by the specified clock
+     */
     inline void update(const ClockType clockToUse)
     {
         clock_gettime((clockid_t)clockToUse, &_time);
@@ -53,7 +52,7 @@ public:
      */
     inline void reset()
     {
-    	_time.tv_sec = _time.tv_nsec = 0;
+        _time.tv_sec = _time.tv_nsec = 0;
     }
 
     /**
@@ -61,10 +60,10 @@ public:
      */
     inline bool hasTime() const
     {
-    	if (getSeconds() || getNanoseconds())
-    		return true;
-    	else
-    		return false;
+        if (getSeconds() || getNanoseconds())
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -77,7 +76,7 @@ public:
      */
     inline const struct timespec getTime() const
     {
-    	return _time;
+        return _time;
     }
 
     /**
@@ -85,7 +84,7 @@ public:
      */
     inline const long int getSeconds() const
     {
-    	return _time.tv_sec;
+        return _time.tv_sec;
     }
 
     /**
@@ -93,23 +92,23 @@ public:
      */
     inline const long int getNanoseconds() const
     {
-    	return _time.tv_nsec;
+        return _time.tv_nsec;
     }
 
     /**
      * @brief Overloaded assignment operator
      */
-    Time& operator=(const Time &rhs);
+    Time &operator=(const Time &rhs);
 
     /**
      * @brief Overloaded += operator
      */
-    Time& operator+=(const Time &rhs);
+    Time &operator+=(const Time &rhs);
 
     /**
      * @brief Overloaded -= operator
      */
-    Time& operator-=(const Time &rhs);
+    Time &operator-=(const Time &rhs);
 
     /**
      * @brief Overloaded addition operator
@@ -145,17 +144,16 @@ public:
      * @brief Constructor that initializes based on a floating point representation, in seconds.
      */
     Time(double floatingRepresentationInSeconds);
-    
+
     /**
      * @brief Constructor that sets an empty time.
      */
     Time();
-private:
 
+private:
     struct timespec _time;
 };
 
 }
 
 #endif
-

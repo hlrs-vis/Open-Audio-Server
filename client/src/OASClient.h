@@ -14,4 +14,3 @@
 #include "SoundUpdateCallback.h"
 
 #endif // _OAS_CLIENT_H_
-

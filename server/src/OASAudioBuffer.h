@@ -20,7 +20,6 @@ namespace oas
 class AudioBuffer
 {
 public:
-
     /**
      * @brief A buffer is uniquely identified by its name, which is an ALuint value.
      */
@@ -29,7 +28,7 @@ public:
     /**
      * @brief Get the filename that the buffer is associated with
      */
-    const std::string& getFilename() const;
+    const std::string &getFilename() const;
 
     /**
      * @brief Return if the buffer is valid or not
@@ -40,7 +39,7 @@ public:
      * @brief Creates a new audio buffer based on the given file
      * @param filename
      */
-    AudioBuffer(const std::string& filename);
+    AudioBuffer(const std::string &filename);
 
     /**
      * @brief Create a new buffer based on the specified waveform.

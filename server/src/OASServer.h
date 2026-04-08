@@ -28,34 +28,32 @@
 #include <unistd.h>
 #endif
 
-
 namespace oas
 {
-
 
 class Server
 {
 public:
-    static Server& getInstance();
+    static Server &getInstance();
 
     // Static wrapper functions for callbacks
     static void terminate();
-    static void* runServer(void *parameter);
-    static void* runServerNoGUI(void *parameter);
+    static void *runServer(void *parameter);
+    static void *runServerNoGUI(void *parameter);
 
     void initialize(int argc, char **argv);
-    const ServerInfo* getServerInfo() const;
+    const ServerInfo *getServerInfo() const;
 
 private:
     Server();
     pthread_t _serverThread;
 
-    ServerInfo* _serverInfo;
+    ServerInfo *_serverInfo;
 
-    AudioHandler& _audioHandler;
+    AudioHandler &_audioHandler;
 
-    void* _run(void *parameter = NULL);
-    void* _runNoGUI(void *parameter = NULL);
+    void *_run(void *parameter = NULL);
+    void *_runNoGUI(void *parameter = NULL);
 
     // private worker methods
     bool _readConfigFile(int argc, char **argv);
@@ -64,12 +62,9 @@ private:
     void _fatalError(const char *errorMessage);
     void _atExit();
 
-
     static void _computeTimeout(struct timespec &timeout, unsigned long timeoutSeconds,
-                                unsigned long timeoutNanoseconds);
-
+        unsigned long timeoutNanoseconds);
 };
 }
 
 #endif
-

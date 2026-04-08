@@ -1,4 +1,4 @@
-/** 
+/**
  * @file OASServerInfo.h
  * @author Shreenidhi Chowkwale
  */
@@ -15,17 +15,16 @@ namespace oas
 class ServerInfo
 {
 public:
-
-    std::string const& getCacheDirectory() const;
+    std::string const &getCacheDirectory() const;
     long int getPort() const;
 
-    std::string const& getAudioDeviceString() const;
-    void setAudioDeviceString(std::string const& audioDevice);
+    std::string const &getAudioDeviceString() const;
+    void setAudioDeviceString(std::string const &audioDevice);
 
     bool useGUI() const;
     void setGUI(bool useGUI);
 
-    ServerInfo(std::string const& cacheDirectory, long int port);
+    ServerInfo(std::string const &cacheDirectory, long int port);
 
 private:
     ServerInfo();
@@ -39,4 +38,3 @@ private:
 }
 
 #endif
-

@@ -2,32 +2,31 @@
 
 #ifdef WIN32
 
-#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+#define bzero(b, len) (memset((b), '\0', (len)), (void)0)
 #endif
 using namespace oas;
 
 const unsigned int ServerWindowLogBrowser::_kMaxLogLineLength = 1000;
 
-
 ServerWindowLogBrowser::ServerWindowLogBrowser(int X, int Y, int W, int H, const char *L)
-: Fl_Browser(X, Y, W, H, L)
+    : Fl_Browser(X, Y, W, H, L)
 {
-	// The Fl_Browser super class's constructor is called first, via initializor list
-	this->_browserSize = 1;
+    // The Fl_Browser super class's constructor is called first, via initializor list
+    this->_browserSize = 1;
 }
 
 void ServerWindowLogBrowser::add(const char *line)
 {
-	if (!line)
-		return;
+    if (!line)
+        return;
 
-	static char buffer[_kMaxLogLineLength];
+    static char buffer[_kMaxLogLineLength];
 
-	// Set buffer contents to 0
-	bzero(buffer, _kMaxLogLineLength);
+    // Set buffer contents to 0
+    bzero(buffer, _kMaxLogLineLength);
 
-	// Copy line contents into buffer
-	strncpy(buffer, line, _kMaxLogLineLength - 1);
+    // Copy line contents into buffer
+    strncpy(buffer, line, _kMaxLogLineLength - 1);
 
     // Wait for a lock on the GUI environment in case other threads are using it
     Fl::lock();
@@ -69,15 +68,15 @@ void ServerWindowLogBrowser::add(const char *line)
 
 void ServerWindowLogBrowser::replaceBottomLine(const char *line)
 {
-	// Wait for a lock on the GUI
-	Fl::lock();
+    // Wait for a lock on the GUI
+    Fl::lock();
 
-	// Replaces the text on the bottom line
-	Fl_Browser::text(this->getBrowserSize(), line);
+    // Replaces the text on the bottom line
+    Fl_Browser::text(this->getBrowserSize(), line);
 
-	// Release lock, let main thread know
-	Fl::unlock();
-	Fl::awake();
+    // Release lock, let main thread know
+    Fl::unlock();
+    Fl::awake();
 }
 
 void ServerWindowLogBrowser::copyToClipboard()
@@ -91,11 +90,11 @@ void ServerWindowLogBrowser::copyToClipboard()
     // This loop calculates the size of the buffer that will need to be allocated
     for (void *i = item_first(); i; i = item_next(i))
     {
-        pLine = (char *) strstr(item_text(i), ServerWindowLogBrowser::getNullBrowserFormatter());
+        pLine = (char *)strstr(item_text(i), ServerWindowLogBrowser::getNullBrowserFormatter());
         if (pLine)
         {
             pLine += ServerWindowLogBrowser::getBrowserFormatterLength();
-            bufferLength += strlen(pLine) + 1;  // Plus one, for the new line character at the end
+            bufferLength += strlen(pLine) + 1; // Plus one, for the new line character at the end
         }
     }
 
@@ -106,7 +105,7 @@ void ServerWindowLogBrowser::copyToClipboard()
     // Copy contents of browser into the buffer
     for (void *i = item_first(); i; i = item_next(i))
     {
-        pLine = (char *) strstr(item_text(i), ServerWindowLogBrowser::getNullBrowserFormatter());
+        pLine = (char *)strstr(item_text(i), ServerWindowLogBrowser::getNullBrowserFormatter());
         if (pLine)
         {
             pLine += ServerWindowLogBrowser::getBrowserFormatterLength();

@@ -3,7 +3,7 @@
 using namespace oas;
 
 // public, static
-AudioHandler& AudioHandler::getInstance()
+AudioHandler &AudioHandler::getInstance()
 {
     static AudioHandler instance;
 
@@ -11,7 +11,7 @@ AudioHandler& AudioHandler::getInstance()
 }
 
 // public
-bool AudioHandler::initialize(std::string const& deviceString)
+bool AudioHandler::initialize(std::string const &deviceString)
 {
     // If we have a specific device we're going to try to use,
     // we have to set up OpenAL manually
@@ -31,7 +31,7 @@ bool AudioHandler::initialize(std::string const& deviceString)
         if (!AudioHandler::_device)
         {
             oas::Logger::errorf("AudioHandler - Failed to open device \"%s\"",
-                                deviceString.c_str());
+                deviceString.c_str());
             return false;
         }
 
@@ -40,7 +40,7 @@ bool AudioHandler::initialize(std::string const& deviceString)
         if (!AudioHandler::_context)
         {
             oas::Logger::errorf("AudioHandler - Failed to create audio context for device \"%s\"",
-                                deviceString.c_str());
+                deviceString.c_str());
             alcCloseDevice(AudioHandler::_device);
             return false;
         }
@@ -49,7 +49,7 @@ bool AudioHandler::initialize(std::string const& deviceString)
         if (!alcMakeContextCurrent(AudioHandler::_context))
         {
             oas::Logger::errorf("AudioHandler - Failed to make context current for device \"%s\"",
-                                deviceString.c_str());
+                deviceString.c_str());
             alcDestroyContext(AudioHandler::_context);
             alcCloseDevice(AudioHandler::_device);
             return false;
@@ -89,7 +89,7 @@ void AudioHandler::release()
         if (sIter->second)
             deleteSource(sIter->second);
     }
-    
+
     _sourceMap.clear();
     oas::AudioSource::resetSources();
 
@@ -125,7 +125,7 @@ void AudioHandler::release()
 }
 
 // public
-ALuint AudioHandler::getBuffer(const std::string& filename)
+ALuint AudioHandler::getBuffer(const std::string &filename)
 {
     if (filename.empty())
     {
@@ -135,11 +135,11 @@ ALuint AudioHandler::getBuffer(const std::string& filename)
     // See if buffer with that filename exists already
     BufferMapIterator iterator = _bufferMap.find(filename);
 
-    // If something was found 
+    // If something was found
     if (_bufferMap.end() != iterator)
     {
         // If the found buffer was valid
-        if(iterator->second && iterator->second->isValid())
+        if (iterator->second && iterator->second->isValid())
         {
             return iterator->second->getHandle();
         }
@@ -160,7 +160,7 @@ ALuint AudioHandler::getBuffer(const std::string& filename)
     {
         delete newBuffer;
         oas::Logger::warnf("AudioHandler - Could not create a sound buffer for \"%s\"",
-                            filename.c_str());
+            filename.c_str());
         return AL_NONE;
     }
 
@@ -169,7 +169,7 @@ ALuint AudioHandler::getBuffer(const std::string& filename)
 }
 
 // private, static
-AudioSource* AudioHandler::_getSource(const ALuint sourceHandle)
+AudioSource *AudioHandler::_getSource(const ALuint sourceHandle)
 {
     // Short circuit the map lookup. See if handle matches the most recently looked up source
     if (_recentSource && (sourceHandle == _recentSource->getHandle()))
@@ -204,18 +204,18 @@ void AudioHandler::_setRecentlyModifiedAudioUnit(const AudioUnit *unit)
 }
 
 // public
-const AudioUnit* AudioHandler::getRecentlyModifiedAudioUnit()
+const AudioUnit *AudioHandler::getRecentlyModifiedAudioUnit()
 {
     return _recentlyModifiedAudioUnit;
 }
 
 // public
-const AudioListener* AudioHandler::getListener()
+const AudioListener *AudioHandler::getListener()
 {
     return AudioListener::getInstance();
 }
 
-void AudioHandler::populateQueueWithUpdatedSources(std::queue <const AudioUnit*> &sources)
+void AudioHandler::populateQueueWithUpdatedSources(std::queue<const AudioUnit *> &sources)
 {
     SourceMapIterator iterator;
 
@@ -269,7 +269,7 @@ int AudioHandler::createSource(ALuint buffer)
 }
 
 // public
-int AudioHandler::createSource(const std::string& filename)
+int AudioHandler::createSource(const std::string &filename)
 {
     ALuint buffer = AudioHandler::getBuffer(filename);
     return AudioHandler::createSource(buffer);
@@ -313,12 +313,12 @@ int AudioHandler::createSource(ALint waveShape, ALfloat frequency, ALfloat phase
 // public
 void AudioHandler::deleteSource(const ALuint sourceHandle)
 {
-	/*
-	 * Strategy:
-	 * The memory allocated for an audio source is not deleted immediately. This is to give time
-	 * for other threads to be notified that this particular audio source has been deleted, and
-	 * prevent access to invalid memory.
-	 */
+    /*
+     * Strategy:
+     * The memory allocated for an audio source is not deleted immediately. This is to give time
+     * for other threads to be notified that this particular audio source has been deleted, and
+     * prevent access to invalid memory.
+     */
 
     // Find the source in the map, and if found, queue it up for deletion
     SourceMapIterator iterator = AudioHandler::_sourceMap.find(sourceHandle);
@@ -331,7 +331,7 @@ void AudioHandler::deleteSource(const ALuint sourceHandle)
         {
             // Let the source know that it is to be deleted
             // Note that the AudioSource is not explicitly deleted yet - only the internal state
-        	// is notified that it is to be deleted
+            // is notified that it is to be deleted
             if (!iterator->second->deleteSource())
             {
                 oas::Logger::warnf("AudioHandler: Deletion of sound source failed!");
@@ -387,7 +387,7 @@ void AudioHandler::playSource(const ALuint sourceHandle)
     AudioSource *source = AudioHandler::_getSource(sourceHandle);
 
     _clearRecentlyModifiedAudioUnit();
-    
+
     if (source)
     {
         if (source->play())
@@ -401,7 +401,7 @@ void AudioHandler::stopSource(const ALuint sourceHandle)
     AudioSource *source = AudioHandler::_getSource(sourceHandle);
 
     _clearRecentlyModifiedAudioUnit();
-    
+
     if (source)
     {
         if (source->stop())
@@ -447,7 +447,6 @@ void AudioHandler::setSourcePlaybackPosition(const ALuint sourceHandle, const AL
         if (source->setPlaybackPosition(seconds))
             _setRecentlyModifiedAudioUnit(source);
     }
-
 }
 
 // public
@@ -456,13 +455,12 @@ void AudioHandler::setSourcePosition(const ALuint sourceHandle, const ALfloat x,
     AudioSource *source = AudioHandler::_getSource(sourceHandle);
 
     _clearRecentlyModifiedAudioUnit();
-    
+
     if (source)
     {
         if (source->setPosition(x, y, z))
             _setRecentlyModifiedAudioUnit(source);
     }
-
 }
 
 // public
@@ -471,13 +469,12 @@ void AudioHandler::setSourceGain(const ALuint sourceHandle, const ALfloat gain)
     AudioSource *source = AudioHandler::_getSource(sourceHandle);
 
     _clearRecentlyModifiedAudioUnit();
-    
+
     if (source)
     {
         if (source->setGain(gain))
             _setRecentlyModifiedAudioUnit(source);
     }
-
 }
 
 // public
@@ -486,13 +483,12 @@ void AudioHandler::setSourceLoop(const ALuint sourceHandle, const ALint isLoop)
     AudioSource *source = AudioHandler::_getSource(sourceHandle);
 
     _clearRecentlyModifiedAudioUnit();
-    
+
     if (source)
     {
         if (source->setLoop(isLoop))
             _setRecentlyModifiedAudioUnit(source);
     }
-
 }
 
 // public
@@ -501,7 +497,7 @@ void AudioHandler::setSourceVelocity(const ALuint sourceHandle, const ALfloat x,
     AudioSource *source = AudioHandler::_getSource(sourceHandle);
 
     _clearRecentlyModifiedAudioUnit();
-    
+
     if (source)
     {
         if (source->setVelocity(x, y, z))
@@ -515,17 +511,16 @@ void AudioHandler::setSourceSpeed(const ALuint sourceHandle, const ALfloat speed
     AudioSource *source = AudioHandler::_getSource(sourceHandle);
 
     _clearRecentlyModifiedAudioUnit();
-    
+
     if (source)
     {
-        if (source->setVelocity( speed * source->getDirectionX(),
-                                 speed * source->getDirectionY(),
-                                 speed * source->getDirectionZ()))
+        if (source->setVelocity(speed * source->getDirectionX(),
+                speed * source->getDirectionY(),
+                speed * source->getDirectionZ()))
         {
             _setRecentlyModifiedAudioUnit(source);
         }
     }
-
 }
 
 // public
@@ -534,22 +529,21 @@ void AudioHandler::setSourceDirection(const ALuint sourceHandle, const ALfloat x
     AudioSource *source = AudioHandler::_getSource(sourceHandle);
 
     _clearRecentlyModifiedAudioUnit();
-    
+
     if (source)
     {
         if (source->setDirection(x, y, z))
             _setRecentlyModifiedAudioUnit(source);
     }
-
 }
 
 // public
 void AudioHandler::setSourceDirection(const ALuint sourceHandle, const ALfloat angleInRadians)
 {
-    AudioHandler::setSourceDirection( sourceHandle, 
-                                      sin(angleInRadians),
-                                      0.0,
-                                      cos(angleInRadians));
+    AudioHandler::setSourceDirection(sourceHandle,
+        sin(angleInRadians),
+        0.0,
+        cos(angleInRadians));
 }
 
 // public
@@ -569,17 +563,16 @@ void AudioHandler::setSourcePitch(const ALuint sourceHandle, const ALfloat pitch
 // public
 void AudioHandler::setSourceFade(const ALuint sourceHandle, const ALfloat fadeToGainValue, const ALfloat durationInSeconds)
 {
-	AudioSource *source = AudioHandler::_getSource(sourceHandle);
+    AudioSource *source = AudioHandler::_getSource(sourceHandle);
 
-	_clearRecentlyModifiedAudioUnit();
+    _clearRecentlyModifiedAudioUnit();
 
-	if (source)
-	{
-		if (source->setFade(fadeToGainValue, durationInSeconds))
-			_setRecentlyModifiedAudioUnit(source);
-	}
+    if (source)
+    {
+        if (source->setFade(fadeToGainValue, durationInSeconds))
+            _setRecentlyModifiedAudioUnit(source);
+    }
 }
-
 
 void AudioHandler::setSoundRenderingParameter(const ALuint sourceHandle, const ALuint whichParameter, const ALfloat value)
 {
@@ -593,23 +586,23 @@ void AudioHandler::setSoundRenderingParameter(const ALuint sourceHandle, const A
 
         switch (whichParameter)
         {
-            case ROLLOFF_FACTOR:
-                result = source->setRolloffFactor(value);
-                break;
-            case REFERENCE_DISTANCE:
-                result = source->setReferenceDistance(value);
-                break;
-            case CONE_INNER_ANGLE:
-                result = source->setConeInnerAngle(value);
-                break;
-            case CONE_OUTER_ANGLE:
-                result = source->setConeOuterAngle(value);
-                break;
-            case CONE_OUTER_GAIN:
-                result = source->setConeOuterGain(value);
-                break;
-            default:
-                break;
+        case ROLLOFF_FACTOR:
+            result = source->setRolloffFactor(value);
+            break;
+        case REFERENCE_DISTANCE:
+            result = source->setReferenceDistance(value);
+            break;
+        case CONE_INNER_ANGLE:
+            result = source->setConeInnerAngle(value);
+            break;
+        case CONE_OUTER_ANGLE:
+            result = source->setConeOuterAngle(value);
+            break;
+        case CONE_OUTER_GAIN:
+            result = source->setConeOuterGain(value);
+            break;
+        default:
+            break;
         }
 
         if (result)
@@ -660,7 +653,7 @@ void AudioHandler::setListenerVelocity(const ALfloat x, const ALfloat y, const A
 }
 
 void AudioHandler::setListenerOrientation(const ALfloat atX, const ALfloat atY, const ALfloat atZ,
-                                   const ALfloat upX, const ALfloat upY, const ALfloat upZ)
+    const ALfloat upX, const ALfloat upY, const ALfloat upZ)
 {
     _clearRecentlyModifiedAudioUnit();
 
@@ -676,21 +669,21 @@ void AudioHandler::setGlobalRenderingParameter(const ALuint whichParameter, ALfl
 
     switch (whichParameter)
     {
-        case SPEED_OF_SOUND:
-            result = AudioListener::getInstance()->setSpeedOfSound(value);
-            break;
-        case DOPPLER_FACTOR:
-            result = AudioListener::getInstance()->setDopplerFactor(value);
-            break;
-        case DEFAULT_ROLLOFF:
-            setDefaultRolloffFactor(value);
-            break;
-        case DEFAULT_REFERENCE_DISTANCE:
-            setDefaultReferenceDistance(value);
-            break;
-        default:
-            oas::Logger::warnf("AudioHandler - Unknown sound rendering parameter %d was specified", whichParameter);
-            break;
+    case SPEED_OF_SOUND:
+        result = AudioListener::getInstance()->setSpeedOfSound(value);
+        break;
+    case DOPPLER_FACTOR:
+        result = AudioListener::getInstance()->setDopplerFactor(value);
+        break;
+    case DEFAULT_ROLLOFF:
+        setDefaultRolloffFactor(value);
+        break;
+    case DEFAULT_REFERENCE_DISTANCE:
+        setDefaultReferenceDistance(value);
+        break;
+    default:
+        oas::Logger::warnf("AudioHandler - Unknown sound rendering parameter %d was specified", whichParameter);
+        break;
     }
 
     if (result)
@@ -698,13 +691,12 @@ void AudioHandler::setGlobalRenderingParameter(const ALuint whichParameter, ALfl
 }
 
 // private constructor
-AudioHandler::AudioHandler() :
-        _recentSource(NULL),
-        _recentlyModifiedAudioUnit(NULL),
-        _device(NULL),
-        _context(NULL),
-        _defaultRolloff(1),
-        _defaultReferenceDistance(1)
+AudioHandler::AudioHandler()
+    : _recentSource(NULL)
+    , _recentlyModifiedAudioUnit(NULL)
+    , _device(NULL)
+    , _context(NULL)
+    , _defaultRolloff(1)
+    , _defaultReferenceDistance(1)
 {
-
 }

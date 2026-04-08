@@ -17,29 +17,29 @@ class ServerWindowLogBrowser : public Fl_Browser
 {
 
 public:
-	ServerWindowLogBrowser(int X, int Y, int W, int H, const char *L = 0);
+    ServerWindowLogBrowser(int X, int Y, int W, int H, const char *L = 0);
 
-	void add(const char *line);
+    void add(const char *line);
     void replaceBottomLine(const char *line);
 
     void copyToClipboard();
 
     inline int getBrowserSize() const
     {
-    	return _browserSize;
+        return _browserSize;
     }
 
-    static inline const char* const getBoldBrowserFormatter()
+    static inline const char *const getBoldBrowserFormatter()
     {
         return "@b";
     }
 
-    static inline const char* const getItalicsBrowserFormatter()
+    static inline const char *const getItalicsBrowserFormatter()
     {
         return "@i";
     }
 
-    static inline const char* const getNullBrowserFormatter()
+    static inline const char *const getNullBrowserFormatter()
     {
         return "@.";
     }
@@ -48,7 +48,6 @@ public:
     {
         return 2;
     }
-
 
 protected:
     // Keeps track of the browser size
@@ -59,7 +58,7 @@ protected:
 private:
     inline void _incrementBrowserSize()
     {
-    	_browserSize++;
+        _browserSize++;
     }
 };
 

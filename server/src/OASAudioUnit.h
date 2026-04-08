@@ -48,7 +48,7 @@ public:
      */
     inline virtual float getGain() const
     {
-    	return _gain;
+        return _gain;
     }
 
     /**
@@ -56,15 +56,15 @@ public:
      */
     inline virtual float getPositionX() const
     {
-    	return _positionX;
+        return _positionX;
     }
     inline virtual float getPositionY() const
     {
-    	return _positionY;
+        return _positionY;
     }
     inline virtual float getPositionZ() const
     {
-    	return _positionZ;
+        return _positionZ;
     }
 
     /**
@@ -72,15 +72,15 @@ public:
      */
     inline virtual float getVelocityX() const
     {
-    	return _velocityX;
+        return _velocityX;
     }
     inline virtual float getVelocityY() const
     {
-    	return _velocityY;
+        return _velocityY;
     }
     inline virtual float getVelocityZ() const
     {
-    	return _velocityZ;
+        return _velocityZ;
     }
 
     inline virtual bool isValid() const
@@ -96,7 +96,7 @@ public:
     /**
      * @brief Get the label for the data entry for the given index
      */
-    virtual const char* getLabelForIndex(int index) const = 0;
+    virtual const char *getLabelForIndex(int index) const = 0;
 
     /**
      * @brief Get the string for the value of the data entry for the given index
@@ -111,14 +111,11 @@ public:
     virtual ~AudioUnit() { }
 
 protected:
-
     bool _isValid;
     ALfloat _gain;
     ALfloat _positionX, _positionY, _positionZ;
     ALfloat _velocityX, _velocityY, _velocityZ;
-
 };
 }
-
 
 #endif /* _OAS_AUDIOUNIT_H_*/

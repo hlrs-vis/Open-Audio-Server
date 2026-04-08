@@ -21,7 +21,6 @@ class AudioSource : public AudioUnit
 {
 
 public:
-
     /**
      * The state is defined as follows:
      * UNKNOWN: state is unknown
@@ -35,7 +34,7 @@ public:
         ST_UNKNOWN = 0,
         ST_INITIAL = 1,
         ST_PLAYING = 2,
-        ST_PAUSED =  3,
+        ST_PAUSED = 3,
         ST_STOPPED = 4,
         ST_DELETED = 5
     };
@@ -249,13 +248,12 @@ public:
     /**
      * @brief Get the label for the data entry for the given index
      */
-    virtual const char* getLabelForIndex(int index) const;
+    virtual const char *getLabelForIndex(int index) const;
 
     /**
      * @brief Get the string for the value of the data entry for the given index
      */
     virtual std::string getStringForIndex(int index) const;
-
 
     /**
      * @brief Get the number of data entries monitored by AudioSource objects
@@ -273,7 +271,6 @@ public:
     ~AudioSource();
 
 protected:
-
     /**
      * Inherited members from superclass AudioUnit are
      *
@@ -323,12 +320,10 @@ private:
     double _fadeGainDiff;
     double _fadeDuration;
     Time _fadeStartTime;
-    Time _fadeEndTime; 	// _fadeEndTime = _fadeStartTime + _fadeDuration
+    Time _fadeEndTime; // _fadeEndTime = _fadeStartTime + _fadeDuration
 
     static ALuint _nextHandle;
-
 };
 }
-
 
 #endif /* _OAS_AUDIOSOURCE_H_*/

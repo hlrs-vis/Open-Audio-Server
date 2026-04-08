@@ -6,7 +6,6 @@ using namespace oas;
 // Statics
 ALuint AudioSource::_nextHandle = 0;
 
-
 AudioSource::AudioSource(ALuint buffer)
 {
     // Set values to default
@@ -96,13 +95,13 @@ bool AudioSource::_wasOperationSuccessful()
     else
     {
         oas::Logger::errorf("OpenAL error for sound source %d. Error code = %d", this->_handle,
-        		alError);
+            alError);
 
         ALenum alutError = alutGetError();
         if (ALUT_ERROR_NO_ERROR != alutError)
         {
-        	oas::Logger::errorf("More information provided by ALUT: \"%s\"",
-        	                    alutGetErrorString(alutError));
+            oas::Logger::errorf("More information provided by ALUT: \"%s\"",
+                alutGetErrorString(alutError));
         }
 
         return false;
@@ -112,40 +111,40 @@ bool AudioSource::_wasOperationSuccessful()
 // private
 bool AudioSource::_checkIncrementalFade()
 {
-	if (!isValid() || !_needsFade())
-	{
-		return false;
-	}
+    if (!isValid() || !_needsFade())
+    {
+        return false;
+    }
 
-	// Check if we have already reached the desired gain value
-	if (getGain() == _fadeFinalGain)
-	{
-		_fadeEndTime.reset();
+    // Check if we have already reached the desired gain value
+    if (getGain() == _fadeFinalGain)
+    {
+        _fadeEndTime.reset();
 
-		return true;
-	}
+        return true;
+    }
 
-	Time currTime;
-	currTime.update(Time::OAS_CLOCK_MONOTONIC);
+    Time currTime;
+    currTime.update(Time::OAS_CLOCK_MONOTONIC);
 
-	// Check if we have reached or passed the fade end time already
-	if (currTime >= _fadeEndTime)
-	{
-		_fadeEndTime.reset();
+    // Check if we have reached or passed the fade end time already
+    if (currTime >= _fadeEndTime)
+    {
+        _fadeEndTime.reset();
 
-		return setGain(_fadeFinalGain);
-	}
+        return setGain(_fadeFinalGain);
+    }
 
-	double timePassed, ratioOfTimeProgress;
+    double timePassed, ratioOfTimeProgress;
 
-	timePassed = (currTime - _fadeStartTime).asDouble();
+    timePassed = (currTime - _fadeStartTime).asDouble();
 
-	ratioOfTimeProgress = timePassed / _fadeDuration;
+    ratioOfTimeProgress = timePassed / _fadeDuration;
 
-	if (ratioOfTimeProgress > 1)
-		ratioOfTimeProgress = 1;
+    if (ratioOfTimeProgress > 1)
+        ratioOfTimeProgress = 1;
 
-	return setGain((ratioOfTimeProgress * _fadeGainDiff) + _fadeInitialGain);
+    return setGain((ratioOfTimeProgress * _fadeGainDiff) + _fadeInitialGain);
 }
 
 // private
@@ -178,21 +177,21 @@ bool AudioSource::update(bool forceUpdate)
 
     switch (alState)
     {
-        case AL_PLAYING:
-            newState = ST_PLAYING;
-            break;
-        case AL_STOPPED:
-            newState = ST_STOPPED;
-            break;
-        case AL_INITIAL:
-            newState = ST_INITIAL;
-            break;
-        case AL_PAUSED:
-            newState = ST_PAUSED;
-            break;
-        default:
-            newState = ST_UNKNOWN;
-            break;
+    case AL_PLAYING:
+        newState = ST_PLAYING;
+        break;
+    case AL_STOPPED:
+        newState = ST_STOPPED;
+        break;
+    case AL_INITIAL:
+        newState = ST_INITIAL;
+        break;
+    case AL_PAUSED:
+        newState = ST_PAUSED;
+        break;
+    default:
+        newState = ST_UNKNOWN;
+        break;
     }
 
     bool didFade = _checkIncrementalFade();
@@ -314,7 +313,6 @@ bool AudioSource::setPlaybackPosition(ALfloat seconds)
     return false;
 }
 
-
 bool AudioSource::setPosition(ALfloat x, ALfloat y, ALfloat z)
 {
     if (isValid())
@@ -357,26 +355,25 @@ bool AudioSource::setGain(ALfloat gain)
 
 bool AudioSource::setFade(ALfloat fadeToGainValue, ALfloat durationInSeconds)
 {
-	if (isValid())
-	{
-		_clearError();
+    if (isValid())
+    {
+        _clearError();
 
-		if (fadeToGainValue < 0)
-			return false;
+        if (fadeToGainValue < 0)
+            return false;
 
-		_fadeFinalGain = fadeToGainValue;
-		_fadeInitialGain = getGain();
-		_fadeGainDiff = _fadeFinalGain - _fadeInitialGain;
+        _fadeFinalGain = fadeToGainValue;
+        _fadeInitialGain = getGain();
+        _fadeGainDiff = _fadeFinalGain - _fadeInitialGain;
 
-		_fadeDuration = durationInSeconds;
-		_fadeStartTime.update(Time::OAS_CLOCK_MONOTONIC);
-		_fadeEndTime = _fadeStartTime + Time(_fadeDuration);
+        _fadeDuration = durationInSeconds;
+        _fadeStartTime.update(Time::OAS_CLOCK_MONOTONIC);
+        _fadeEndTime = _fadeStartTime + Time(_fadeDuration);
 
+        return _checkIncrementalFade();
+    }
 
-		return _checkIncrementalFade();
-	}
-
-	return false;
+    return false;
 }
 
 bool AudioSource::setLoop(ALint isLoop)
@@ -475,7 +472,6 @@ bool AudioSource::setPitch(ALfloat pitchFactor)
 
     return false;
 }
-
 
 bool AudioSource::setRolloffFactor(ALfloat rolloff)
 {
@@ -584,12 +580,12 @@ bool AudioSource::deleteSource()
         }
         else
         {
-        	return false;
+            return false;
         }
     }
     else
     {
-    	return true;
+        return true;
     }
 }
 
@@ -648,13 +644,11 @@ bool AudioSource::isSoundSource() const
     return true;
 }
 
-const char* AudioSource::getLabelForIndex(int index) const
+const char *AudioSource::getLabelForIndex(int index) const
 {
     static const int k_numLabels = 13;
-    static const char* labels[k_numLabels] =
-    { "Status", "Gain", "Loop", "Pitch", "PosX", "PosY", "PosZ", "VelX", "VelY", "VelZ", "DirX",
-      "DirY", "DirZ"
-    };
+    static const char *labels[k_numLabels] = { "Status", "Gain", "Loop", "Pitch", "PosX", "PosY", "PosZ", "VelX", "VelY", "VelZ", "DirX",
+        "DirY", "DirZ" };
 
     if (index >= 0 && index < k_numLabels)
         return labels[index];
@@ -664,78 +658,78 @@ const char* AudioSource::getLabelForIndex(int index) const
 
 std::string AudioSource::getStringForIndex(int index) const
 {
-    char buffer[50] = {0};
+    char buffer[50] = { 0 };
 
     switch (index)
     {
-        // Status
-        case 0:
-            if (ST_INITIAL == getState())
-                sprintf(buffer, "Stopped");
-            else if (ST_PLAYING == getState())
-                sprintf(buffer, "Playing");
-            else if (ST_STOPPED == getState())
-                sprintf(buffer, "Stopped");
-            else if (ST_PAUSED == getState())
-                sprintf(buffer, "Paused");
-            else if (ST_DELETED == getState())
-                sprintf(buffer, "Deleting");
-            else
-                sprintf(buffer, "Unknown");
-            break;
-        // Gain
-        case 1:
-            sprintf(buffer, "%.2f", getGain());
-            break;
-        // Looping
-        case 2:
-            if (isLooping())
-                sprintf(buffer, "On");
-            else
-                sprintf(buffer, "Off");
-            break;
-        // Pitch
-        case 3:
-            sprintf(buffer, "%.3f", getPitch());
-            break;
-        // Position X
-        case 4:
-            sprintf(buffer, "%.3f", getPositionX());
-            break;
-        // Position Y
-        case 5:
-            sprintf(buffer, "%.3f", getPositionY());
-            break;
-        // Position Z
-        case 6:
-            sprintf(buffer, "%.3f", getPositionZ());
-            break;
-        // Velocity X
-        case 7:
-            sprintf(buffer, "%.3f", getVelocityX());
-            break;
-        // Velocity Y
-        case 8:
-            sprintf(buffer, "%.3f", getVelocityY());
-            break;
-        // Velocity Z
-        case 9:
-            sprintf(buffer, "%.3f", getVelocityZ());
-            break;
-        // Direction X
-        case 10:
-            sprintf(buffer, "%.3f", getDirectionX());
-            break;
-        // Direction Y
-        case 11:
-            sprintf(buffer, "%.3f", getDirectionY());
-            break;
-        // Direction Z
-        case 12:
-            sprintf(buffer, "%.3f", getDirectionZ());
-            break;
-        default:
-            break;
+    // Status
+    case 0:
+        if (ST_INITIAL == getState())
+            sprintf(buffer, "Stopped");
+        else if (ST_PLAYING == getState())
+            sprintf(buffer, "Playing");
+        else if (ST_STOPPED == getState())
+            sprintf(buffer, "Stopped");
+        else if (ST_PAUSED == getState())
+            sprintf(buffer, "Paused");
+        else if (ST_DELETED == getState())
+            sprintf(buffer, "Deleting");
+        else
+            sprintf(buffer, "Unknown");
+        break;
+    // Gain
+    case 1:
+        sprintf(buffer, "%.2f", getGain());
+        break;
+    // Looping
+    case 2:
+        if (isLooping())
+            sprintf(buffer, "On");
+        else
+            sprintf(buffer, "Off");
+        break;
+    // Pitch
+    case 3:
+        sprintf(buffer, "%.3f", getPitch());
+        break;
+    // Position X
+    case 4:
+        sprintf(buffer, "%.3f", getPositionX());
+        break;
+    // Position Y
+    case 5:
+        sprintf(buffer, "%.3f", getPositionY());
+        break;
+    // Position Z
+    case 6:
+        sprintf(buffer, "%.3f", getPositionZ());
+        break;
+    // Velocity X
+    case 7:
+        sprintf(buffer, "%.3f", getVelocityX());
+        break;
+    // Velocity Y
+    case 8:
+        sprintf(buffer, "%.3f", getVelocityY());
+        break;
+    // Velocity Z
+    case 9:
+        sprintf(buffer, "%.3f", getVelocityZ());
+        break;
+    // Direction X
+    case 10:
+        sprintf(buffer, "%.3f", getDirectionX());
+        break;
+    // Direction Y
+    case 11:
+        sprintf(buffer, "%.3f", getDirectionY());
+        break;
+    // Direction Z
+    case 12:
+        sprintf(buffer, "%.3f", getDirectionZ());
+        break;
+    default:
+        break;
     }
 
     return buffer;

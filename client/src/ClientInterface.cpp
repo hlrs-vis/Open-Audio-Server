@@ -46,9 +46,8 @@ bool ClientInterface::initialize(const std::string &host, unsigned short port)
 
     setsockopt(socketFD, IPPROTO_TCP, TCP_NODELAY, &one, sizeof(one));
 
-
     // Connect to the established socket
-    if (-1 == connect(socketFD, (struct sockaddr *) &stSockAddr, sizeof(stSockAddr)))
+    if (-1 == connect(socketFD, (struct sockaddr *)&stSockAddr, sizeof(stSockAddr)))
     {
         close(socketFD);
         return false;
@@ -87,7 +86,7 @@ bool ClientInterface::writeToServer(const char *format, ...)
     }
 
     // Create a buffer that should be more than long enough to fit data
-    char buf[PACKET_SIZE * 2] = {0};
+    char buf[PACKET_SIZE * 2] = { 0 };
     int bufSizeAttempt, length;
     va_list args;
 
@@ -112,7 +111,7 @@ bool ClientInterface::writeToServer(const char *format, ...)
 
 bool ClientInterface::readFromServer(char *&data, size_t &count)
 {
-    char buf[PACKET_SIZE] = {0};
+    char buf[PACKET_SIZE] = { 0 };
     int retval;
 
     data = NULL;
@@ -124,8 +123,8 @@ bool ClientInterface::readFromServer(char *&data, size_t &count)
     }
 
     retval = read(ClientInterface::_socketFD,
-                  buf,
-                  ClientInterface::PACKET_SIZE);
+        buf,
+        ClientInterface::PACKET_SIZE);
 
     if (-1 == retval || 0 == retval)
     {
@@ -136,7 +135,7 @@ bool ClientInterface::readFromServer(char *&data, size_t &count)
 
     char *newData = new char[count];
     memcpy(newData, buf, count);
-    
+
     data = newData;
     return true;
 }
@@ -193,7 +192,7 @@ bool ClientInterface::sendFile(const std::string &sPath, const std::string &sFil
     fileSize = fileInfo.st_size;
 
     // Send the PTFI message to the server
-    char buf[PACKET_SIZE + 1] = {0};
+    char buf[PACKET_SIZE + 1] = { 0 };
     int sizeAttempt = snprintf(buf, PACKET_SIZE, "PTFI %s %d", sFilename.c_str(), fileSize);
 
     // If the amount written to buffer is greater than what we can send, return false
@@ -211,11 +210,11 @@ bool ClientInterface::sendFile(const std::string &sPath, const std::string &sFil
     data = new char[fileSize];
     std::ifstream fileIn(filePath, std::ios::in | std::ios::binary);
     fileIn.read(data, fileInfo.st_size);
-    
+
     // Send the file over the socket
     int bytesLeft, bytesWritten;
     char *dataPtr;
-    
+
     bytesLeft = fileSize;
     dataPtr = data;
 
@@ -237,9 +236,8 @@ bool ClientInterface::sendFile(const std::string &sPath, const std::string &sFil
         // Reduce the number of bytes remaining by the number of bytes written
         bytesLeft -= bytesWritten;
     }
-   
+
     delete[] data;
 
     return true;
 }
-

@@ -28,7 +28,7 @@ class ServerWindow
 
 public:
     // Create new thread, make double window, set up browser
-    static bool initialize(int argc, char **argv, void (*atExitCallback) (void));
+    static bool initialize(int argc, char **argv, void (*atExitCallback)(void));
 
     static inline bool isInitialized()
     {
@@ -41,7 +41,7 @@ public:
             _sourcesTable->reset();
     }
 
-    static inline void audioUnitWasModified(const AudioUnit* audioUnit)
+    static inline void audioUnitWasModified(const AudioUnit *audioUnit)
     {
         if (isInitialized())
         {
@@ -52,13 +52,13 @@ public:
         }
     }
 
-    static inline void audioSourcesWereModified(std::queue<const AudioUnit*> &audioUnits)
+    static inline void audioSourcesWereModified(std::queue<const AudioUnit *> &audioUnits)
     {
         if (isInitialized())
             _sourcesTable->audioUnitsWereModified(audioUnits);
     }
 
-    static inline void audioListenerWasModified(const AudioListener* listener)
+    static inline void audioListenerWasModified(const AudioListener *listener)
     {
         if (isInitialized() && listener && !listener->isSoundSource())
             _listenerTable->audioUnitWasModified(listener);
@@ -76,17 +76,17 @@ public:
             _browser->replaceBottomLine(line);
     }
 
-    static inline const char* const getBoldBrowserFormatter()
+    static inline const char *const getBoldBrowserFormatter()
     {
         return ServerWindowLogBrowser::getBoldBrowserFormatter();
     }
 
-    static inline const char* const getItalicsBrowserFormatter()
+    static inline const char *const getItalicsBrowserFormatter()
     {
         return ServerWindowLogBrowser::getItalicsBrowserFormatter();
     }
 
-    static const char* const getNullBrowserFormatter()
+    static const char *const getNullBrowserFormatter()
     {
         return ServerWindowLogBrowser::getNullBrowserFormatter();
     }
@@ -95,7 +95,6 @@ public:
     {
         return ServerWindowLogBrowser::getBrowserFormatterLength();
     }
-
 
 protected:
     // The double window class gives us a double buffered window. This will contain
@@ -125,7 +124,7 @@ protected:
     static bool _isInitialized;
 
     // Function pointer that will be called when window is closed, before program exits
-    static void (*_atExitCallback) (void);
+    static void (*_atExitCallback)(void);
 
     static const unsigned int _kWindowWidth;
     static const unsigned int _kWindowHeight;
@@ -138,13 +137,12 @@ protected:
     static const unsigned int _kTableWidth;
     static const unsigned int _kButtonHeight;
     static const unsigned int _kButtonWidth;
-    
-private:
 
-	static void* _windowLoop(void *parameter);
-    static void _confirmExitCallback(Fl_Widget*, void*);
-    static void _copyToClipboardButtonCallback(Fl_Widget*, void*);
-    static void _clearButtonCallback(Fl_Widget*, void*);
+private:
+    static void *_windowLoop(void *parameter);
+    static void _confirmExitCallback(Fl_Widget *, void *);
+    static void _copyToClipboardButtonCallback(Fl_Widget *, void *);
+    static void _clearButtonCallback(Fl_Widget *, void *);
 };
 
 }

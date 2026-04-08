@@ -7,12 +7,12 @@
 
 using namespace oasclient;
 
-SoundUpdateCallback::SoundUpdateCallback(Sound *sound, double updateIntervalInSeconds) :
-        osg::NodeCallback(),
-        _sound(sound),
-        _updateIntervalInSeconds(updateIntervalInSeconds),
-        _firstRun(true),
-        _prevTime(0)
+SoundUpdateCallback::SoundUpdateCallback(Sound *sound, double updateIntervalInSeconds)
+    : osg::NodeCallback()
+    , _sound(sound)
+    , _updateIntervalInSeconds(updateIntervalInSeconds)
+    , _firstRun(true)
+    , _prevTime(0)
 {
 }
 
@@ -24,7 +24,7 @@ void SoundUpdateCallback::operator()(osg::Node *node, osg::NodeVisitor *nodeVisi
 {
     const osg::FrameStamp *frameStamp = nodeVisitor->getFrameStamp();
 
-    if ( !_sound || !_sound->isValid() || (frameStamp == NULL))
+    if (!_sound || !_sound->isValid() || (frameStamp == NULL))
     {
         traverse(node, nodeVisitor);
         return;

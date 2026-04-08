@@ -7,7 +7,7 @@
 #include "OASSocketHandler.h"
 #ifdef WIN32
 #define MAXHOSTNAMELEN 128
-#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+#define bzero(b, len) (memset((b), '\0', (len)), (void)0)
 #include <ws2tcpip.h>
 #else
 #define closesocket close
@@ -16,19 +16,18 @@
 using namespace oas;
 
 // Statics
-struct sockaddr_in      SocketHandler::_stSockAddr;
-int                     SocketHandler::_socketHandle;
-unsigned short          SocketHandler::_listeningPort;
-pthread_t               SocketHandler::_socketThread;
-std::queue<Message*>    SocketHandler::_incomingMessages;
-pthread_mutex_t         SocketHandler::_inMutex;
-pthread_cond_t          SocketHandler::_inCondition;
-std::queue<char *>      SocketHandler::_outgoingResponses;
-pthread_mutex_t         SocketHandler::_outMutex;
-pthread_cond_t          SocketHandler::_outCondition;
-bool                    SocketHandler::_isSocketOpen;
-bool                    SocketHandler::_isConnectedToClient = false;
-
+struct sockaddr_in SocketHandler::_stSockAddr;
+int SocketHandler::_socketHandle;
+unsigned short SocketHandler::_listeningPort;
+pthread_t SocketHandler::_socketThread;
+std::queue<Message *> SocketHandler::_incomingMessages;
+pthread_mutex_t SocketHandler::_inMutex;
+pthread_cond_t SocketHandler::_inCondition;
+std::queue<char *> SocketHandler::_outgoingResponses;
+pthread_mutex_t SocketHandler::_outMutex;
+pthread_cond_t SocketHandler::_outCondition;
+bool SocketHandler::_isSocketOpen;
+bool SocketHandler::_isConnectedToClient = false;
 
 // static, public
 bool SocketHandler::initialize(long int listeningPort)
@@ -41,7 +40,7 @@ bool SocketHandler::initialize(long int listeningPort)
 
     if (!_validatePortNumber(listeningPort))
     {
-    	return false;
+        return false;
     }
     SocketHandler::_listeningPort = listeningPort;
 
@@ -71,10 +70,10 @@ bool SocketHandler::initialize(long int listeningPort)
     pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_JOINABLE);
 
     // Spawn thread to run the loop that handles connections
-    int threadError = pthread_create( &SocketHandler::_socketThread,
-                                      &threadAttr,
-                                      &SocketHandler::_socketLoop,
-                                      NULL);
+    int threadError = pthread_create(&SocketHandler::_socketThread,
+        &threadAttr,
+        &SocketHandler::_socketLoop,
+        NULL);
 
     // Destroy thread attribute
     pthread_attr_destroy(&threadAttr);
@@ -102,7 +101,7 @@ void SocketHandler::terminate()
 
 void SocketHandler::waitForSocketHandlerToTerminate()
 {
-	pthread_join(SocketHandler::_socketThread, NULL);
+    pthread_join(SocketHandler::_socketThread, NULL);
 }
 
 // static, public
@@ -118,7 +117,7 @@ bool SocketHandler::_openSocket()
     {
         SocketHandler::_closeSocket();
     }
-    
+
     SocketHandler::_isSocketOpen = false;
 
     // Create a new socket
@@ -137,11 +136,7 @@ bool SocketHandler::_openSocket()
 #endif
 
     // Set socket option SO_REUSEADDR - lets the server reuse the port if there is a disconnect
-    if (-1 == setsockopt( SocketHandler::_socketHandle, 
-                          SOL_SOCKET, 
-                          SO_REUSEADDR, 
-                          &enableReuse, 
-                          sizeof(enableReuse)))
+    if (-1 == setsockopt(SocketHandler::_socketHandle, SOL_SOCKET, SO_REUSEADDR, &enableReuse, sizeof(enableReuse)))
     {
         oas::Logger::error("SocketHandler - Failed to set the socket as reusable");
         closesocket(SocketHandler::_socketHandle);
@@ -157,15 +152,13 @@ bool SocketHandler::_openSocket()
     SocketHandler::_stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     // Bind socket address data to handle
-    if (-1 == bind( SocketHandler::_socketHandle, 
-                    (struct sockaddr *) &SocketHandler::_stSockAddr, 
-                    sizeof(SocketHandler::_stSockAddr)))
+    if (-1 == bind(SocketHandler::_socketHandle, (struct sockaddr *)&SocketHandler::_stSockAddr, sizeof(SocketHandler::_stSockAddr)))
     {
         oas::Logger::error("SocketHandler - Failed to bind socket to address");
         closesocket(SocketHandler::_socketHandle);
         return false;
     }
-    
+
     // Prepare socket for listening
     if (-1 == listen(SocketHandler::_socketHandle, 1))
     {
@@ -176,22 +169,21 @@ bool SocketHandler::_openSocket()
 
     SocketHandler::_isSocketOpen = true;
 
-
     char buf[MAXHOSTNAMELEN], ipBuf[INET_ADDRSTRLEN];
     struct hostent *host;
 
     // Note: gethostbyname is deprecated due to lack of support for IPv6. Change if needed.
     if (-1 != gethostname(buf, MAXHOSTNAMELEN)
-            && (NULL != (host = gethostbyname(buf)))
-            && (NULL != inet_ntop(AF_INET, *host->h_addr_list, ipBuf, INET_ADDRSTRLEN)))
+        && (NULL != (host = gethostbyname(buf)))
+        && (NULL != inet_ntop(AF_INET, *host->h_addr_list, ipBuf, INET_ADDRSTRLEN)))
     {
         oas::Logger::logf("Audio Server \"%s\" (%s) is waiting for client to connect on port %d...",
-                          buf, ipBuf, SocketHandler::_listeningPort);
+            buf, ipBuf, SocketHandler::_listeningPort);
     }
     else
     {
         oas::Logger::logf("Audio Server is listening on port %d...",
-                               SocketHandler::_listeningPort);
+            SocketHandler::_listeningPort);
     }
 
     return true;
@@ -238,10 +230,10 @@ int SocketHandler::_acceptNewConnection()
     struct sockaddr_in clientAddr;
     socklen_t addrSize;
 
-    addrSize = sizeof (clientAddr);
+    addrSize = sizeof(clientAddr);
     int connection = accept(SocketHandler::_socketHandle,
-                            (struct sockaddr *) &clientAddr,
-                            &addrSize);
+        (struct sockaddr *)&clientAddr,
+        &addrSize);
 
     if (0 > connection)
     {
@@ -251,12 +243,12 @@ int SocketHandler::_acceptNewConnection()
     {
         char buf[INET_ADDRSTRLEN];
         const char *addrPtr = inet_ntop(AF_INET,
-                                        &clientAddr.sin_addr,
-                                        buf,
-                                        INET_ADDRSTRLEN);
+            &clientAddr.sin_addr,
+            buf,
+            INET_ADDRSTRLEN);
 
         oas::Logger::logf("A new client has connected from %s.",
-                          addrPtr ? addrPtr : "(null)");
+            addrPtr ? addrPtr : "(null)");
     }
     return connection;
 }
@@ -280,14 +272,14 @@ bool SocketHandler::isSocketOpen()
 }
 
 // static, private
-void* SocketHandler::_socketLoop(void* parameter)
+void *SocketHandler::_socketLoop(void *parameter)
 {
     int connection;
 
     // Strategy:
-    // One outer infinite loop keeps the server listening for connections over time, allowing 
+    // One outer infinite loop keeps the server listening for connections over time, allowing
     // multiple clients to connect and disconnect. The inner infinite loop reads data from the
-    // current active connection, parses the data into messages, and queues up the messages to 
+    // current active connection, parses the data into messages, and queues up the messages to
     // be read by another thread.
 
     while (1)
@@ -297,12 +289,12 @@ void* SocketHandler::_socketLoop(void* parameter)
         {
             oas::Logger::logf("SocketHandler - Resetting the server...");
             alutSleep(10.0);
-            continue; 
+            continue;
         }
 
         // This thread will block until a client connects.
         connection = SocketHandler::_acceptNewConnection();
-        
+
         // If connection is an invalid socket descriptor, some error occured
         if (0 > connection)
         {
@@ -324,7 +316,7 @@ void* SocketHandler::_socketLoop(void* parameter)
         while (validConnection)
         {
             // If the circular buffer is out of space, reset it to the beginning
-            if ( ((bufPtr + MAX_TRANSMIT_BUFFER_SIZE) - circularBuf) >= MAX_CIRCULAR_BUFFER_SIZE)
+            if (((bufPtr + MAX_TRANSMIT_BUFFER_SIZE) - circularBuf) >= MAX_CIRCULAR_BUFFER_SIZE)
             {
                 bufPtr = circularBuf;
             }
@@ -334,7 +326,7 @@ void* SocketHandler::_socketLoop(void* parameter)
 
             // Read from the socket
 #ifdef WIN32
-            amountRead = recv(connection, bufPtr, MAX_TRANSMIT_BUFFER_SIZE,0);
+            amountRead = recv(connection, bufPtr, MAX_TRANSMIT_BUFFER_SIZE, 0);
 #else
             amountRead = read(connection, bufPtr, MAX_TRANSMIT_BUFFER_SIZE);
 #endif
@@ -349,12 +341,12 @@ void* SocketHandler::_socketLoop(void* parameter)
 
             // Client disconnected
             if (0 == amountRead)
-    	    {
+            {
                 oas::Logger::logf("SocketHandler - Client disconnected.");
                 SocketHandler::_closeConnection(connection);
                 break;
-		    }
-        
+            }
+
             /* IMPORTANT:   We don't know if bufPtr points to the beginning of an actual message.
              *              We have to parse starting from the endpoint of the previous message
              *              for a more robust implementation.
@@ -362,7 +354,7 @@ void* SocketHandler::_socketLoop(void* parameter)
 
             amountParsed = 0;
 
-            // Keep parsing the current input data until the amount parsed is equal to the amount read 
+            // Keep parsing the current input data until the amount parsed is equal to the amount read
             while (amountParsed < amountRead)
             {
                 // Message needs to be parsed, starting from bufPtr
@@ -370,7 +362,6 @@ void* SocketHandler::_socketLoop(void* parameter)
                 Message::MessageError parseError;
 
                 parseError = newMessage->parseString(bufPtr, amountRead, amountParsed);
-
 
                 // check parseError to keep track as necessary
                 if (Message::MERROR_NONE != parseError)
@@ -381,11 +372,12 @@ void* SocketHandler::_socketLoop(void* parameter)
                         delete newMessage;
                         break;
                     }
-                    // Else there was some parsing error 
+                    // Else there was some parsing error
                     else
                     {
                         oas::Logger::warnf("SocketHandler - Parsing failed for incoming message: \"%s\" "
-                                            "This message will be ignored.",  bufPtr);
+                                           "This message will be ignored.",
+                            bufPtr);
                         delete newMessage;
                         break;
                     }
@@ -393,7 +385,7 @@ void* SocketHandler::_socketLoop(void* parameter)
                 // Else, there was no error in parsing
                 else
                 {
-//                    oas::Logger::logf("SocketHandler - \"%s\"", newMessage->getOriginalString().c_str());
+                    //                    oas::Logger::logf("SocketHandler - \"%s\"", newMessage->getOriginalString().c_str());
                     // If the message is to quit
                     if (Message::MT_QUIT == newMessage->getMessageType())
                     {
@@ -422,7 +414,7 @@ void* SocketHandler::_socketLoop(void* parameter)
 
                         // write the response to the socket connection
 #ifdef WIN32
-                        amountWritten = send(connection, response, strlen(response),0);
+                        amountWritten = send(connection, response, strlen(response), 0);
 #else
                         amountWritten = write(connection, response, strlen(response));
 #endif
@@ -446,40 +438,40 @@ void* SocketHandler::_socketLoop(void* parameter)
 }
 
 // static, private
-void SocketHandler::_receiveBinaryFile(int connection, const Message& ptfi)
+void SocketHandler::_receiveBinaryFile(int connection, const Message &ptfi)
 {
     char *data, *dataPtr;
-	int fileSize, bytesLeft, bytesRead;
+    int fileSize, bytesLeft, bytesRead;
     oas::FileHandler fileHandler;
-	bool errorOccured = false;
+    bool errorOccured = false;
 
-	fileSize = ptfi.getIntegerParam();
-	bytesLeft = fileSize;
-	data = new char[fileSize];
-	dataPtr = data;
+    fileSize = ptfi.getIntegerParam();
+    bytesLeft = fileSize;
+    data = new char[fileSize];
+    dataPtr = data;
 
     oas::Logger::logf("> Receiving file \"%s\" (%d bytes) over socket.",
-                      ptfi.getFilename().c_str(),
-                      bytesLeft);
+        ptfi.getFilename().c_str(),
+        bytesLeft);
 
     long count = 0;
 
-	while (bytesLeft > 0)
-	{
+    while (bytesLeft > 0)
+    {
 #ifdef WIN32
-		bytesRead = recv(connection, dataPtr, bytesLeft,0);
+        bytesRead = recv(connection, dataPtr, bytesLeft, 0);
 #else
         bytesRead = read(connection, dataPtr, bytesLeft);
 #endif
 
-		if (bytesRead == 0 || bytesRead == -1)
-		{
-			oas::Logger::errorf("SocketHandler - Error occured while receiving %s!",
-			                    ptfi.getFilename().c_str());
-			errorOccured = true;
-			break;
-		}
-		
+        if (bytesRead == 0 || bytesRead == -1)
+        {
+            oas::Logger::errorf("SocketHandler - Error occured while receiving %s!",
+                ptfi.getFilename().c_str());
+            errorOccured = true;
+            break;
+        }
+
         bytesLeft -= bytesRead;
         dataPtr += bytesRead;
 
@@ -487,25 +479,25 @@ void SocketHandler::_receiveBinaryFile(int connection, const Message& ptfi)
 
         if (!errorOccured && ((0 == (count % 50)) || 0 == bytesLeft))
         {
-            float percentage = ((float) (fileSize - bytesLeft) / fileSize) * 100.0;
+            float percentage = ((float)(fileSize - bytesLeft) / fileSize) * 100.0;
             oas::Logger::logf("> File %s...%.2f%% complete.",
-                             ptfi.getFilename().c_str(), percentage);
+                ptfi.getFilename().c_str(), percentage);
         }
-	}
+    }
 
     // Write data to file
     if (!errorOccured && !fileHandler.writeFile(ptfi.getFilename(), data, fileSize))
     {
         oas::Logger::errorf("SocketHandler - Error occured while writing %s to disk.",
-                            ptfi.getFilename().c_str());
+            ptfi.getFilename().c_str());
         errorOccured = true;
     }
 
     if (!errorOccured)
-	{
-	    oas::Logger::logf("> File transmission complete.");
-	    oas::Logger::logf("> %s is %d bytes", ptfi.getFilename().c_str(), fileSize);
-	}
+    {
+        oas::Logger::logf("> File transmission complete.");
+        oas::Logger::logf("> %s is %d bytes", ptfi.getFilename().c_str(), fileSize);
+    }
 
     delete[] data;
 }
@@ -534,7 +526,7 @@ void SocketHandler::_addToIncomingMessages(Message *message)
 }
 
 // static, public
-void SocketHandler::populateQueueWithIncomingMessages(std::queue<Message*> &destination, const Time &timeout)
+void SocketHandler::populateQueueWithIncomingMessages(std::queue<Message *> &destination, const Time &timeout)
 {
     // lock mutex
     pthread_mutex_lock(&SocketHandler::_inMutex);
@@ -542,7 +534,7 @@ void SocketHandler::populateQueueWithIncomingMessages(std::queue<Message*> &dest
     // while the incoming messages queue is empty
     while (SocketHandler::_incomingMessages.empty())
     {
-    	struct timespec tspecout = timeout.getTime();
+        struct timespec tspecout = timeout.getTime();
         // wait (block) on condition variable for queue to have content, or until timeout occurs
         int error = pthread_cond_timedwait(&SocketHandler::_inCondition, &SocketHandler::_inMutex, &tspecout);
 
@@ -560,7 +552,7 @@ void SocketHandler::populateQueueWithIncomingMessages(std::queue<Message*> &dest
     while (!SocketHandler::_incomingMessages.empty())
     {
         // retrieve data after we're done waiting
-        Message* nextMessage = SocketHandler::_incomingMessages.front();
+        Message *nextMessage = SocketHandler::_incomingMessages.front();
         SocketHandler::_incomingMessages.pop();
         destination.push(nextMessage);
     }
@@ -582,7 +574,7 @@ void SocketHandler::addOutgoingResponse(const char *response)
     char *newString = new char[strlen(response) + 1];
     strcpy(newString, response);
 
-    // lock mutex 
+    // lock mutex
     pthread_mutex_lock(&SocketHandler::_outMutex);
 
     // add our copy of the response to the queue
@@ -604,7 +596,7 @@ void SocketHandler::addOutgoingResponse(const long response)
 }
 
 // static, private
-char* SocketHandler::_getNextOutgoingResponse()
+char *SocketHandler::_getNextOutgoingResponse()
 {
     char *retval = NULL;
 
@@ -631,13 +623,13 @@ char* SocketHandler::_getNextOutgoingResponse()
 // static, private
 bool SocketHandler::_validatePortNumber(long int portNum)
 {
-	if (portNum > 0 && portNum <= 65535)
-	{
-		return true;
-	}
-	else
-	{
-    	oas::Logger::errorf("The specified port number, %ld, is invalid! Values must be between 1 and 65535", portNum);
-		return false;
-	}
+    if (portNum > 0 && portNum <= 65535)
+    {
+        return true;
+    }
+    else
+    {
+        oas::Logger::errorf("The specified port number, %ld, is invalid! Values must be between 1 and 65535", portNum);
+        return false;
+    }
 }

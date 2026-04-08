@@ -8,7 +8,7 @@
 using namespace oasclient;
 
 // static
-Listener& Listener::getInstance()
+Listener &Listener::getInstance()
 {
     static Listener instance;
 
@@ -25,7 +25,6 @@ bool Listener::setGain(float gain)
     return result;
 }
 
-
 bool Listener::setPosition(float x, float y, float z)
 {
     bool result = ClientInterface::writeToServer("SLPO %f %f %f", x, y, z);
@@ -37,7 +36,6 @@ bool Listener::setPosition(float x, float y, float z)
     }
     return result;
 }
-
 
 bool Listener::setVelocity(float x, float y, float z)
 {
@@ -53,10 +51,10 @@ bool Listener::setVelocity(float x, float y, float z)
 }
 
 bool Listener::setOrientation(float atX, float atY, float atZ,
-        float upX, float upY, float upZ)
+    float upX, float upY, float upZ)
 {
     bool result = ClientInterface::writeToServer("SLOR %f %f %f %f %f %f",
-                                        atX, atY, atZ, upX, upY, upZ);
+        atX, atY, atZ, upX, upY, upZ);
     if (result)
     {
         _atX = atX;
@@ -93,7 +91,6 @@ bool Listener::setGlobalRolloffFactor(float defaultRolloffFactor)
 {
     return setGlobalRenderingParameters(DEFAULT_ROLLOFF, defaultRolloffFactor);
 }
-
 
 std::vector<float> Listener::getPosition() const
 {
@@ -157,4 +154,3 @@ Listener::Listener()
     _atY = 0;
     _atZ = -1;
 }
-

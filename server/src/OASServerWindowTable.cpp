@@ -5,14 +5,14 @@
 
 #ifdef WIN32
 
-#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+#define bzero(b, len) (memset((b), '\0', (len)), (void)0)
 #endif
 
 using namespace oas;
 
 ServerWindowTable::ServerWindowTable(int X, int Y, int W, int H, const char *L,
-                                     int numColumns)
-: Fl_Table(X, Y, W, H, L)
+    int numColumns)
+    : Fl_Table(X, Y, W, H, L)
 {
     // Set up Rows
     rows(0); // Set the initial number of rows (empty)
@@ -64,7 +64,7 @@ void ServerWindowTable::reset()
     Fl::unlock();
 }
 
-void ServerWindowTable::audioUnitWasModified(const AudioUnit* audioUnit)
+void ServerWindowTable::audioUnitWasModified(const AudioUnit *audioUnit)
 {
     // Lock mutex
     pthread_mutex_lock(&_queueMutex);
@@ -76,7 +76,7 @@ void ServerWindowTable::audioUnitWasModified(const AudioUnit* audioUnit)
     pthread_mutex_unlock(&_queueMutex);
 }
 
-void ServerWindowTable::audioUnitsWereModified(std::queue<const AudioUnit*> &audioUnits)
+void ServerWindowTable::audioUnitsWereModified(std::queue<const AudioUnit *> &audioUnits)
 {
     // If the queue is empty, there's nothing to do
     if (audioUnits.empty())
@@ -137,7 +137,7 @@ void ServerWindowTable::update()
 
     // Create a temporary queue that is a duplicate of the processing queue
     // The original processing queue is simultaneously emptied out
-    std::queue<const AudioUnit*> tempQueue;
+    std::queue<const AudioUnit *> tempQueue;
 
     while (!_audioUnitProcessingQueue.empty())
     {
@@ -152,7 +152,7 @@ void ServerWindowTable::update()
     _updateAudioUnitMap(tempQueue);
 }
 
-void ServerWindowTable::_updateAudioUnitMap(std::queue<const AudioUnit*> &queue)
+void ServerWindowTable::_updateAudioUnitMap(std::queue<const AudioUnit *> &queue)
 {
     Fl::lock();
 
@@ -178,7 +178,7 @@ void ServerWindowTable::_updateAudioUnitMap(std::queue<const AudioUnit*> &queue)
         {
             // Else, we are either replacing or removing the audio unit
             if (unit->isSoundSource()
-                    && (AudioSource::ST_DELETED == (static_cast<const AudioSource *>(unit))->getState()))
+                && (AudioSource::ST_DELETED == (static_cast<const AudioSource *>(unit))->getState()))
             {
                 // If the source was marked for deletion, remove the entry from the map altogether
                 _audioUnitMap.erase(iterator);
@@ -226,7 +226,7 @@ void ServerWindowTable::_drawData(const char *s, int X, int Y, int W, int H)
 }
 
 void ServerWindowTable::draw_cell(TableContext context, int ROW = 0, int COL = 0, int X = 0,
-                                  int Y = 0, int W = 0, int H = 0)
+    int Y = 0, int W = 0, int H = 0)
 {
 #define BUFFER_SIZE 40
 
@@ -255,7 +255,7 @@ void ServerWindowTable::draw_cell(TableContext context, int ROW = 0, int COL = 0
         // Rebuild the vector
         _audioUnitVector.clear();
         for (AudioUnitMapConstIterator iter = _audioUnitMap.begin();
-                iter != _audioUnitMap.end(); ++iter)
+            iter != _audioUnitMap.end(); ++iter)
         {
             _audioUnitVector.push_back(iter->second);
         }
@@ -263,29 +263,29 @@ void ServerWindowTable::draw_cell(TableContext context, int ROW = 0, int COL = 0
 
     switch (context)
     {
-        case CONTEXT_STARTPAGE: // before page is drawn..
-            fl_font(FL_HELVETICA, 16); // set the font for our drawing operations
-            break;
-        case CONTEXT_COL_HEADER: // Draw column headers
-            sprintf(buffer, "%s", _getColumnHeaderForAudioUnit(COL)); // "A", "B", "C", etc.
-            this->_drawHeader(buffer, X, Y, W, H);
-            break;
-        case CONTEXT_ROW_HEADER: // Draw row headers
-            sprintf(buffer, "%03d:", _audioUnitVector[ROW]->getHandle()); // "001:", "002:", etc
-            this->_drawHeader(buffer, X, Y, W, H);
-            break;
-        case CONTEXT_CELL: // Draw data in cells
-            _writeCellContentsForAudioUnit(_audioUnitVector[ROW], COL, buffer);
-            this->_drawData(buffer, X, Y, W, H);
-            break;
-        default:
-            break;
+    case CONTEXT_STARTPAGE: // before page is drawn..
+        fl_font(FL_HELVETICA, 16); // set the font for our drawing operations
+        break;
+    case CONTEXT_COL_HEADER: // Draw column headers
+        sprintf(buffer, "%s", _getColumnHeaderForAudioUnit(COL)); // "A", "B", "C", etc.
+        this->_drawHeader(buffer, X, Y, W, H);
+        break;
+    case CONTEXT_ROW_HEADER: // Draw row headers
+        sprintf(buffer, "%03d:", _audioUnitVector[ROW]->getHandle()); // "001:", "002:", etc
+        this->_drawHeader(buffer, X, Y, W, H);
+        break;
+    case CONTEXT_CELL: // Draw data in cells
+        _writeCellContentsForAudioUnit(_audioUnitVector[ROW], COL, buffer);
+        this->_drawData(buffer, X, Y, W, H);
+        break;
+    default:
+        break;
     }
 
     Fl::unlock();
 }
 
-const char* ServerWindowTable::_getColumnHeaderForAudioUnit(int column)
+const char *ServerWindowTable::_getColumnHeaderForAudioUnit(int column)
 {
     return _audioUnitMap.begin()->second ? _audioUnitMap.begin()->second->getLabelForIndex(column) : "";
 }

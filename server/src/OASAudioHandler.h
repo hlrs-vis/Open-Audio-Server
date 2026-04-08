@@ -25,51 +25,50 @@ namespace oas
  */
 
 // Buffer Map types
-typedef std::map<std::string, AudioBuffer*>     BufferMap;
-typedef BufferMap::iterator                     BufferMapIterator;
-typedef BufferMap::const_iterator               BufferMapConstIterator;
-typedef std::pair<std::string, AudioBuffer*>    BufferPair;
+typedef std::map<std::string, AudioBuffer *> BufferMap;
+typedef BufferMap::iterator BufferMapIterator;
+typedef BufferMap::const_iterator BufferMapConstIterator;
+typedef std::pair<std::string, AudioBuffer *> BufferPair;
 
 // Source Map types
-typedef std::map<ALuint, AudioSource*>          SourceMap;
-typedef SourceMap::iterator                     SourceMapIterator;
-typedef SourceMap::const_iterator               SourceMapConstIterator;
-typedef std::pair<ALuint, AudioSource*>         SourcePair;
+typedef std::map<ALuint, AudioSource *> SourceMap;
+typedef SourceMap::iterator SourceMapIterator;
+typedef SourceMap::const_iterator SourceMapConstIterator;
+typedef std::pair<ALuint, AudioSource *> SourcePair;
 
 class AudioHandler
 {
 public:
-
     /**
      * These constants are used to designate which parameter to modify.
      */
     enum GlobalRenderingParameter
     {
-        SPEED_OF_SOUND              = 1,
-        DOPPLER_FACTOR              = 2,
-        DEFAULT_ROLLOFF             = 3,
-        DEFAULT_REFERENCE_DISTANCE  = 4,
+        SPEED_OF_SOUND = 1,
+        DOPPLER_FACTOR = 2,
+        DEFAULT_ROLLOFF = 3,
+        DEFAULT_REFERENCE_DISTANCE = 4,
     };
 
     enum SoundRenderingParameter
     {
-        ROLLOFF_FACTOR              = 1,
-        REFERENCE_DISTANCE          = 2,
-        CONE_INNER_ANGLE            = 3,
-        CONE_OUTER_ANGLE            = 4,
-        CONE_OUTER_GAIN             = 5,
+        ROLLOFF_FACTOR = 1,
+        REFERENCE_DISTANCE = 2,
+        CONE_INNER_ANGLE = 3,
+        CONE_OUTER_ANGLE = 4,
+        CONE_OUTER_GAIN = 5,
     };
 
-    static AudioHandler& getInstance();
+    static AudioHandler &getInstance();
 
-    bool initialize(std::string const& deviceString);
+    bool initialize(std::string const &deviceString);
     void release();
 
     /**
-     * @brief Gets the buffer that is associated with the file pointed to by filename. 
+     * @brief Gets the buffer that is associated with the file pointed to by filename.
      *        Creates a new buffer if necessary.
      */
-    ALuint getBuffer(const std::string& filename);
+    ALuint getBuffer(const std::string &filename);
 
     /**
      * @brief Create a new source based on the input buffer
@@ -81,7 +80,7 @@ public:
      * @brief Create a new source with the audio file that is pointed to by filename
      * @retval Unique handle for the created source, or -1 on error
      */
-    int createSource(const std::string& filename);
+    int createSource(const std::string &filename);
 
     /**
      * @brief Create a new source based on the specified waveform.
@@ -100,18 +99,18 @@ public:
     /**
      * @brief Retrieve a const pointer to the most recently modified audio unit
      */
-    const AudioUnit* getRecentlyModifiedAudioUnit();
+    const AudioUnit *getRecentlyModifiedAudioUnit();
 
     /**
      * @brief Retrieve a const pointer to the Listener
      */
-    const AudioListener* getListener();
+    const AudioListener *getListener();
 
     /**
      * @brief Retrieve copies of all updated sources inside the given queue
      * @param sources
      */
-    void populateQueueWithUpdatedSources(std::queue <const AudioUnit*> &sources);
+    void populateQueueWithUpdatedSources(std::queue<const AudioUnit *> &sources);
 
     /**
      * @brief Updates sources without retrieving copies of them
@@ -184,7 +183,7 @@ public:
     void setSourcePosition(const ALuint source, const ALfloat x, const ALfloat y, const ALfloat z);
 
     /**
-     * @brief Set the source's gain. 
+     * @brief Set the source's gain.
      * @param gain A value 0.0 will effectively mute the source.
      */
     void setSourceGain(const ALuint source, const ALfloat gain);
@@ -228,9 +227,9 @@ public:
      * @param fadeToGainValue This will be gain value that the source will fade to. For example, if a source was
      * 						  being faded out, then fadeToGainValue should be 0. For a fade in, set this parameter
      * 						  to be greater than what the current gain is.
-	 * @param durationInSeconds This is the amount of time over which the fade should take place.
-	 * 							If the duration is small (< 1 second), then the fade occur quickly.
-	 * 							If the duration is large, then the fade will be more gradual.
+     * @param durationInSeconds This is the amount of time over which the fade should take place.
+     * 							If the duration is small (< 1 second), then the fade occur quickly.
+     * 							If the duration is large, then the fade will be more gradual.
      */
     void setSourceFade(const ALuint source, const ALfloat fadeToGainValue, const ALfloat durationInSeconds);
 
@@ -264,7 +263,7 @@ public:
      * @brief Set the listener orientation
      */
     void setListenerOrientation(const ALfloat atX, const ALfloat atY, const ALfloat atZ,
-                                       const ALfloat upX, const ALfloat upY, const ALfloat upZ);
+        const ALfloat upX, const ALfloat upY, const ALfloat upZ);
 
     /**
      * @brief Set global rendering parameter
@@ -279,23 +278,23 @@ public:
 private:
     AudioHandler();
 
-    AudioSource* _getSource(const ALuint source);
+    AudioSource *_getSource(const ALuint source);
     void _clearRecentlyModifiedAudioUnit();
-    void _setRecentlyModifiedAudioUnit(const AudioUnit*);
+    void _setRecentlyModifiedAudioUnit(const AudioUnit *);
     void _processLazyDeletionQueue();
 
     BufferMap _bufferMap;
     SourceMap _sourceMap;
 
-    AudioSource* _recentSource;
+    AudioSource *_recentSource;
 
     const AudioUnit *_recentlyModifiedAudioUnit;
 
-    std::queue<AudioSource*> _lazyDeletionQueue;
+    std::queue<AudioSource *> _lazyDeletionQueue;
 
     std::string _deviceString;
-    ALCdevice* _device;
-    ALCcontext* _context;
+    ALCdevice *_device;
+    ALCcontext *_context;
 
     ALfloat _defaultRolloff;
     ALfloat _defaultReferenceDistance;
@@ -303,4 +302,3 @@ private:
 
 }
 #endif
-

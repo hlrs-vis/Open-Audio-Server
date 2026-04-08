@@ -10,7 +10,6 @@
 #include <AL/alut.h>
 #include "OASAudioUnit.h"
 
-
 namespace oas
 {
 /**
@@ -20,11 +19,10 @@ class AudioListener : public AudioUnit
 {
 
 public:
-
     /**
      * The AudioListener is a singleton.
      */
-    static AudioListener* getInstance();
+    static AudioListener *getInstance();
 
     /**
      * Get the handle of the listener
@@ -56,7 +54,7 @@ public:
      * @brief Set the orientation vectors (look-at and up)
      */
     bool setOrientation(ALfloat atX, ALfloat atY, ALfloat atZ,
-                        ALfloat upX, ALfloat upY, ALfloat upZ);
+        ALfloat upX, ALfloat upY, ALfloat upZ);
 
     /**
      * Set the speed of sound. This is used for doppler effect calculations, and
@@ -101,7 +99,7 @@ public:
     /**
      * @brief Get the label for the data entry for the given index
      */
-    const char* getLabelForIndex(int index) const;
+    const char *getLabelForIndex(int index) const;
 
     /**
      * @brief Get the string for the value of the data entry for the given index
@@ -116,7 +114,6 @@ public:
     ~AudioListener();
 
 protected:
-
     /**
      * Inherited members from superclass AudioUnit are
      *
@@ -142,6 +139,5 @@ private:
     ALfloat _dopplerFactor;
 };
 }
-
 
 #endif /* _OAS_AUDIOSOURCE_H_*/

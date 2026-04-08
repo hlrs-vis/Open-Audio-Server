@@ -34,7 +34,7 @@ public:
 
     virtual void operator()(osg::Node *node, osg::NodeVisitor *nv);
 
-    const Sound* getSound() const;
+    const Sound *getSound() const;
     void setSound(Sound *sound);
 
 protected:

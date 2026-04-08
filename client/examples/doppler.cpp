@@ -2,9 +2,9 @@
  * @file doppler.cpp
  * @author Shree Chowkwale
  *
- * This client example for OAS takes a file as a command line argument, and 
+ * This client example for OAS takes a file as a command line argument, and
  * demonstrates the audio server's rendering of the doppler effect.
- * 
+ *
  * The listener's position, velocity, and orientation stay constant, at their
  * default values, for the duration of this example.
  *
@@ -35,8 +35,8 @@ int main(int argc, char **argv)
 
     if (!sound.isValid())
     {
-        std::cerr << "--> Unable to create the sound specified by '"<< filepath
-                << "'" << std::endl;
+        std::cerr << "--> Unable to create the sound specified by '" << filepath
+                  << "'" << std::endl;
         exit(2);
     }
 
@@ -118,7 +118,6 @@ void runExample(oasclient::Sound &sound)
     usleep(100000);
 }
 
-
 std::string processArgsAndInitConnection(int argc, char **argv)
 {
     std::string ipAddrStr;
@@ -136,7 +135,7 @@ std::string processArgsAndInitConnection(int argc, char **argv)
     else if (argc == 4)
     {
         ipAddrStr = argv[1];
-        port = (unsigned short) atol(argv[2]);
+        port = (unsigned short)atol(argv[2]);
         filepath = argv[3];
     }
     else
@@ -155,4 +154,3 @@ std::string processArgsAndInitConnection(int argc, char **argv)
 
     return filepath;
 }
-

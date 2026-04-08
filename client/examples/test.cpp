@@ -13,16 +13,15 @@ int main(int argc, char **argv)
     // and 0 phase shift, with a 2 second duration
     oasclient::Sound test = oasclient::Sound(oasclient::Sound::SINE, 261.63, 0, 5);
 
-
     if (!test.isValid())
     {
         std::cerr << "--> Unable to create the test sound." << std::endl;
         exit(2);
     }
 
-    test.setGain(0.2);      // Sound is initially at a low gain
-    test.play();            // Play the sound
-    test.fade(0.8, 3);      // Fade in gradually, over 3 seconds
+    test.setGain(0.2); // Sound is initially at a low gain
+    test.play(); // Play the sound
+    test.fade(0.8, 3); // Fade in gradually, over 3 seconds
 
     sleep(6);
 
@@ -48,7 +47,7 @@ void processArgsAndInitConnection(int argc, char **argv)
     else if (argc == 3)
     {
         ipAddrStr = argv[1];
-        port = (unsigned short) atol(argv[2]);
+        port = (unsigned short)atol(argv[2]);
     }
     else
     {

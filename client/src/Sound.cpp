@@ -95,7 +95,6 @@ long Sound::getHandle() const
     return _handle;
 }
 
-
 bool Sound::play(float seconds)
 {
     if (!isValid())
@@ -220,7 +219,7 @@ bool Sound::setDirection(float x, float y, float z)
 }
 
 bool Sound::setVelocity(float x, float y, float z)
-{   
+{
     if (!isValid())
         return false;
 
@@ -264,7 +263,7 @@ bool Sound::fade(float finalGain, float durationInSeconds)
     _fadeEndTime = _fadeStartTime + Time(_fadeDuration);
 
     return ClientInterface::writeToServer("FADE %ld %f %f",
-                                            _handle, finalGain, durationInSeconds);
+        _handle, finalGain, durationInSeconds);
 }
 
 bool Sound::setRenderingParameter(RenderingParameter whichParameter, float value)
@@ -281,7 +280,7 @@ bool Sound::updateState()
         return false;
 
     bool result = ClientInterface::writeToServer("STAT %ld", _handle);
-    
+
     if (result)
     {
         int state;
@@ -295,7 +294,7 @@ bool Sound::updateState()
             }
             else
             {
-                _state = (Sound::SoundState) state;
+                _state = (Sound::SoundState)state;
             }
         }
     }
@@ -443,4 +442,3 @@ void Sound::_splitFilename(const std::string &joinedFilePath)
         _filename = joinedFilePath.substr(pathPos + 1);
     }
 }
-

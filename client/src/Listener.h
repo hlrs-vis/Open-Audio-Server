@@ -29,12 +29,11 @@ class Listener
 #endif
 {
 public:
-
     /**
      * Retrieve a reference to the singleton Listener object, which
      * can then be used to modify listener attributes.
      */
-    static Listener& getInstance();
+    static Listener &getInstance();
 
     /**
      * Modify the global (listener's) gain level. The default is 1, and a value of 0 will mute all
@@ -64,8 +63,7 @@ public:
      * look-at vector and <0, 0, 1> for your up vector.
      */
     bool setOrientation(float atX, float atY, float atZ,
-                                float upX, float upY, float upZ);
-
+        float upX, float upY, float upZ);
 
     /**
      * These constants are designate various global parameters
@@ -168,7 +166,6 @@ private:
     float _atX, _atY, _atZ;
     float _upX, _upY, _upZ;
     float _gain;
-
 };
 }
 

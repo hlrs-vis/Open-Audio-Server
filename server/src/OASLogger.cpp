@@ -17,14 +17,13 @@ void Logger::logf(const char *message, ...)
 
 #ifdef FLTK_FOUND
     sprintf(buf, "%s%s", ServerWindow::getNullBrowserFormatter(),
-                         message ? message : "(null)");
+        message ? message : "(null)");
 #else
     sprintf(buf, "%s", message ? message : "(null)");
 #endif
 
     Logger::_sendFormattedOutput(buf, args);
     va_end(args);
-    
 }
 
 // public, static
@@ -37,14 +36,14 @@ void Logger::warnf(const char *message, ...)
 
 #ifdef FLTK_FOUND
     sprintf(buf, "%s%sWARNING: %s", ServerWindow::getItalicsBrowserFormatter(),
-                                    ServerWindow::getNullBrowserFormatter(),
-                                    message ? message : "(null)");
+        ServerWindow::getNullBrowserFormatter(),
+        message ? message : "(null)");
 #else
     sprintf(buf, "WARNING: %s", message ? message : "(null)");
 #endif
 
     Logger::_sendFormattedOutput(buf, args);
-    va_end(args);   
+    va_end(args);
 }
 
 // public, static
@@ -57,15 +56,14 @@ void Logger::errorf(const char *message, ...)
 
 #ifdef FLTK_FOUND
     sprintf(buf, "%s%sERROR: %s", ServerWindow::getBoldBrowserFormatter(),
-                                  ServerWindow::getNullBrowserFormatter(),
-                                  message ? message : "(null)");
+        ServerWindow::getNullBrowserFormatter(),
+        message ? message : "(null)");
 #else
     sprintf(buf, "ERROR: %s", message ? message : "(null)");
 #endif
 
     Logger::_sendFormattedOutput(buf, args);
     va_end(args);
-    
 }
 
 // public, static
@@ -88,11 +86,11 @@ void Logger::logReplaceBottomLine(const char *message, ...)
 {
     char buf[MAX_LOG_MESSAGE_SIZE];
     va_list args;
-    
+
     va_start(args, message);
 #ifdef FLTK_FOUND
     sprintf(buf, "%s%s", ServerWindow::getNullBrowserFormatter(),
-                         message ? message : "(null)");
+        message ? message : "(null)");
 #else
     sprintf(buf, "%s", message ? message : "(null)");
 #endif
@@ -127,14 +125,14 @@ void Logger::_sendFormattedOutput(const char *format, va_list args)
 void Logger::_replaceBottomLineFormattedOutput(const char *format, va_list args)
 {
     char buf[MAX_LOG_MESSAGE_SIZE * 2];
-    
+
     vsprintf(buf, format, args);
-    
+
 #ifdef FLTK_FOUND
     if (ServerWindow::isInitialized())
     {
         ServerWindow::replaceBottomLine(buf);
-    }   
+    }
     else
     {
         Logger::_sendToConsole(buf);
@@ -164,4 +162,3 @@ void Logger::_sendToConsole(const char *buf)
         std::cerr << (ptr + ServerWindow::getBrowserFormatterLength()) << std::endl;
 #endif
 }
-

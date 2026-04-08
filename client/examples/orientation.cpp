@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     if (!sound.isValid())
     {
         std::cerr << "--> Unable to create the sound specified by '" << filepath
-                << "'" << std::endl;
+                  << "'" << std::endl;
         exit(2);
     }
 
@@ -49,19 +49,23 @@ void runExample(oasclient::Sound &sound)
     if (!sound.isValid())
         return;
 
-    std::cerr << "This example demonstrates some of the properties of directional audio, through a series of demos." << std::endl << std::endl;
+    std::cerr << "This example demonstrates some of the properties of directional audio, through a series of demos." << std::endl
+              << std::endl;
 
     std::cerr << "Beginning the first part of the orientation example." << std::endl;
     part1(sound);
-    std::cerr << std::endl << "Finished the first part of the orientation example." << std::endl;
+    std::cerr << std::endl
+              << "Finished the first part of the orientation example." << std::endl;
 
     part2(sound);
-    std::cerr << std::endl << "Finished the second part of the orientation example." << std::endl;
+    std::cerr << std::endl
+              << "Finished the second part of the orientation example." << std::endl;
     /*
     usleep(3000000);
     part3(sound);
     */
-    std::cerr << std::endl << "Example finished." << std::endl;
+    std::cerr << std::endl
+              << "Example finished." << std::endl;
 }
 
 void reset(oasclient::Sound &sound)
@@ -69,7 +73,7 @@ void reset(oasclient::Sound &sound)
     // Set the listener's orientation so that it is looking down the positive Y axis,
     // and the "up" direction is in the positive Z axis. This means that the listener is
     // placed on the X-Y plane, with "up" being positive Z.
-    oasclient::Listener::getInstance().setOrientation(0, 1, 0,   0, 0, 1);
+    oasclient::Listener::getInstance().setOrientation(0, 1, 0, 0, 0, 1);
 
     // Place the sound 3 units directly in front of the listener
     sound.setPosition(0, 3, 0);
@@ -93,8 +97,8 @@ void part1(oasclient::Sound &sound)
     float angle = PI / 2;
 
     const float endAngle = angle + (2 * PI);
-    const float partRunTime = 20;               // Run this part for approximately this duration, in seconds
-    const float iterationSleepTime = 10000;     // Sleep for this amount each loop iteration, in microseconds
+    const float partRunTime = 20; // Run this part for approximately this duration, in seconds
+    const float iterationSleepTime = 10000; // Sleep for this amount each loop iteration, in microseconds
 
     // Based on the above two constants, this is how much the angle needs to be incremented each iteration
     const float angleIncrement = (2 * PI) / (partRunTime * (1000000 / iterationSleepTime));
@@ -104,7 +108,7 @@ void part1(oasclient::Sound &sound)
 
     while (angle < endAngle)
     {
-        listener.setOrientation(cos(angle), sin(angle), 0,  0, 0, 1);
+        listener.setOrientation(cos(angle), sin(angle), 0, 0, 0, 1);
         usleep(iterationSleepTime);
         angle += angleIncrement;
     }
@@ -116,7 +120,9 @@ void part2(oasclient::Sound &sound)
 {
     reset(sound);
 
-    std::cerr << "Starting the next part soon..." << std::endl << std::endl;;
+    std::cerr << "Starting the next part soon..." << std::endl
+              << std::endl;
+    ;
 
     std::cerr << "For this part, the listener will remain stationary, and will face the sound source the entire time." << std::endl;
     std::cerr << "The sound source's position will not be changed, but its orientation will be modified." << std::endl;
@@ -126,8 +132,8 @@ void part2(oasclient::Sound &sound)
 
     float angle = 3 * (PI / 2);
     const float endAngle = angle + (2 * PI);
-    const float partRunTime = 15;               // Run this part for approximately this duration, in seconds
-    const float iterationSleepTime = 10000;     // Sleep for this amount each loop iteration, in microseconds
+    const float partRunTime = 15; // Run this part for approximately this duration, in seconds
+    const float iterationSleepTime = 10000; // Sleep for this amount each loop iteration, in microseconds
 
     // Based on the above two constants, this is how much the angle needs to be incremented each iteration
     const float angleIncrement = (2 * PI) / (partRunTime * (1000000 / iterationSleepTime));
@@ -145,7 +151,8 @@ void part2(oasclient::Sound &sound)
 
     sound.stop();
     reset(sound);
-    std::cerr << "Finished playing the sound." << std::endl << std::endl;
+    std::cerr << "Finished playing the sound." << std::endl
+              << std::endl;
     std::cerr << "The previous part will now be repeated to demonstrate how directional cones work." << std::endl;
     std::cerr << "The cone properties of the source will be tweaked so that the source uses a much smaller cone." << std::endl;
     std::cerr << "Here, the cone inner angle will be 20 degrees, and the outer angle will be 90 degrees." << std::endl;
@@ -190,7 +197,7 @@ std::string processArgsAndInitConnection(int argc, char **argv)
     else if (argc == 4)
     {
         ipAddrStr = argv[1];
-        port = (unsigned short) atol(argv[2]);
+        port = (unsigned short)atol(argv[2]);
         filepath = argv[3];
     }
     else
@@ -209,4 +216,3 @@ std::string processArgsAndInitConnection(int argc, char **argv)
 
     return filepath;
 }
-
