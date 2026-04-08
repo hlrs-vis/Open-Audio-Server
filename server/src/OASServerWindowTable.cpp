@@ -267,11 +267,11 @@ void ServerWindowTable::draw_cell(TableContext context, int ROW = 0, int COL = 0
         fl_font(FL_HELVETICA, 16); // set the font for our drawing operations
         break;
     case CONTEXT_COL_HEADER: // Draw column headers
-        sprintf(buffer, "%s", _getColumnHeaderForAudioUnit(COL)); // "A", "B", "C", etc.
+        snprintf(buffer, sizeof(buffer), "%s", _getColumnHeaderForAudioUnit(COL)); // "A", "B", "C", etc.
         this->_drawHeader(buffer, X, Y, W, H);
         break;
     case CONTEXT_ROW_HEADER: // Draw row headers
-        sprintf(buffer, "%03d:", _audioUnitVector[ROW]->getHandle()); // "001:", "002:", etc
+        snprintf(buffer, sizeof(buffer), "%03d:", _audioUnitVector[ROW]->getHandle()); // "001:", "002:", etc
         this->_drawHeader(buffer, X, Y, W, H);
         break;
     case CONTEXT_CELL: // Draw data in cells
@@ -295,5 +295,5 @@ void ServerWindowTable::_writeCellContentsForAudioUnit(const AudioUnit *audioUni
     if (!buffer)
         return;
 
-    sprintf(buffer, "%s", audioUnit->getStringForIndex(column).c_str());
+    snprintf(buffer, sizeof(buffer), "%s", audioUnit->getStringForIndex(column).c_str());
 }

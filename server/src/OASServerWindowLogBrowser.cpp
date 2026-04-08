@@ -109,7 +109,7 @@ void ServerWindowLogBrowser::copyToClipboard()
         if (pLine)
         {
             pLine += ServerWindowLogBrowser::getBrowserFormatterLength();
-            sprintf(pMover, "%s\n", pLine);
+            snprintf(pMover, bufferLength, "%s\n", pLine);
             pMover += strlen(pLine) + 1;
         }
     }

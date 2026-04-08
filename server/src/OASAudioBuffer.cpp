@@ -59,7 +59,7 @@ AudioBuffer::AudioBuffer(ALint waveShape, ALfloat frequency, ALfloat phase, ALfl
     if (AL_NONE != _handle)
     {
         char buffer[250];
-        sprintf(buffer, "wave: %i, %f, %f, %f", waveShape, frequency, phase, duration);
+        snprintf(buffer, sizeof(buffer), "wave: %i, %f, %f, %f", waveShape, frequency, phase, duration);
         _filename = std::string(buffer);
     }
 }

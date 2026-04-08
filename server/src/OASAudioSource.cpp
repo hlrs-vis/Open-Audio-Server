@@ -665,68 +665,68 @@ std::string AudioSource::getStringForIndex(int index) const
     // Status
     case 0:
         if (ST_INITIAL == getState())
-            sprintf(buffer, "Stopped");
+            snprintf(buffer, sizeof(buffer), "Stopped");
         else if (ST_PLAYING == getState())
-            sprintf(buffer, "Playing");
+            snprintf(buffer, sizeof(buffer), "Playing");
         else if (ST_STOPPED == getState())
-            sprintf(buffer, "Stopped");
+            snprintf(buffer, sizeof(buffer), "Stopped");
         else if (ST_PAUSED == getState())
-            sprintf(buffer, "Paused");
+            snprintf(buffer, sizeof(buffer), "Paused");
         else if (ST_DELETED == getState())
-            sprintf(buffer, "Deleting");
+            snprintf(buffer, sizeof(buffer), "Deleting");
         else
-            sprintf(buffer, "Unknown");
+            snprintf(buffer, sizeof(buffer), "Unknown");
         break;
     // Gain
     case 1:
-        sprintf(buffer, "%.2f", getGain());
+        snprintf(buffer, sizeof(buffer), "%.2f", getGain());
         break;
     // Looping
     case 2:
         if (isLooping())
-            sprintf(buffer, "On");
+            snprintf(buffer, sizeof(buffer), "On");
         else
-            sprintf(buffer, "Off");
+            snprintf(buffer, sizeof(buffer), "Off");
         break;
     // Pitch
     case 3:
-        sprintf(buffer, "%.3f", getPitch());
+        snprintf(buffer, sizeof(buffer), "%.3f", getPitch());
         break;
     // Position X
     case 4:
-        sprintf(buffer, "%.3f", getPositionX());
+        snprintf(buffer, sizeof(buffer), "%.3f", getPositionX());
         break;
     // Position Y
     case 5:
-        sprintf(buffer, "%.3f", getPositionY());
+        snprintf(buffer, sizeof(buffer), "%.3f", getPositionY());
         break;
     // Position Z
     case 6:
-        sprintf(buffer, "%.3f", getPositionZ());
+        snprintf(buffer, sizeof(buffer), "%.3f", getPositionZ());
         break;
     // Velocity X
     case 7:
-        sprintf(buffer, "%.3f", getVelocityX());
+        snprintf(buffer, sizeof(buffer), "%.3f", getVelocityX());
         break;
     // Velocity Y
     case 8:
-        sprintf(buffer, "%.3f", getVelocityY());
+        snprintf(buffer, sizeof(buffer), "%.3f", getVelocityY());
         break;
     // Velocity Z
     case 9:
-        sprintf(buffer, "%.3f", getVelocityZ());
+        snprintf(buffer, sizeof(buffer), "%.3f", getVelocityZ());
         break;
     // Direction X
     case 10:
-        sprintf(buffer, "%.3f", getDirectionX());
+        snprintf(buffer, sizeof(buffer), "%.3f", getDirectionX());
         break;
     // Direction Y
     case 11:
-        sprintf(buffer, "%.3f", getDirectionY());
+        snprintf(buffer, sizeof(buffer), "%.3f", getDirectionY());
         break;
     // Direction Z
     case 12:
-        sprintf(buffer, "%.3f", getDirectionZ());
+        snprintf(buffer, sizeof(buffer), "%.3f", getDirectionZ());
         break;
     default:
         break;

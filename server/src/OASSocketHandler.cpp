@@ -591,7 +591,7 @@ void SocketHandler::addOutgoingResponse(const long response)
 {
     // wrap the response into a character buffer
     char buf[MAX_TRANSMIT_BUFFER_SIZE];
-    sprintf(buf, "%ld\n", response);
+    snprintf(buf, sizeof(buf), "%ld\n", response);
     SocketHandler::addOutgoingResponse(buf);
 }
 

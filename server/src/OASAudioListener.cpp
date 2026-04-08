@@ -193,55 +193,55 @@ std::string AudioListener::getStringForIndex(int index) const
     {
     // Gain
     case 0:
-        sprintf(buffer, "%.2f", getGain());
+        snprintf(buffer, sizeof(buffer), "%.2f", getGain());
         break;
     // Position X
     case 1:
-        sprintf(buffer, "%.3f", getPositionX());
+        snprintf(buffer, sizeof(buffer), "%.3f", getPositionX());
         break;
     // Position Y
     case 2:
-        sprintf(buffer, "%.3f", getPositionY());
+        snprintf(buffer, sizeof(buffer), "%.3f", getPositionY());
         break;
     // Position Z
     case 3:
-        sprintf(buffer, "%.3f", getPositionZ());
+        snprintf(buffer, sizeof(buffer), "%.3f", getPositionZ());
         break;
     // Velocity X
     case 4:
-        sprintf(buffer, "%.3f", getVelocityX());
+        snprintf(buffer, sizeof(buffer), "%.3f", getVelocityX());
         break;
     // Velocity Y
     case 5:
-        sprintf(buffer, "%.3f", getVelocityY());
+        snprintf(buffer, sizeof(buffer), "%.3f", getVelocityY());
         break;
     // Velocity Z
     case 6:
-        sprintf(buffer, "%.3f", getVelocityZ());
+        snprintf(buffer, sizeof(buffer), "%.3f", getVelocityZ());
         break;
     // Look At X
     case 7:
-        sprintf(buffer, "%.3f", getOrientationLookAtX());
+        snprintf(buffer, sizeof(buffer), "%.3f", getOrientationLookAtX());
         break;
     // Look At Y
     case 8:
-        sprintf(buffer, "%.3f", getOrientationLookAtY());
+        snprintf(buffer, sizeof(buffer), "%.3f", getOrientationLookAtY());
         break;
     // Look At Z
     case 9:
-        sprintf(buffer, "%.3f", getOrientationLookAtZ());
+        snprintf(buffer, sizeof(buffer), "%.3f", getOrientationLookAtZ());
         break;
     // Up X
     case 10:
-        sprintf(buffer, "%.3f", getOrientationUpX());
+        snprintf(buffer, sizeof(buffer), "%.3f", getOrientationUpX());
         break;
     // Up Y
     case 11:
-        sprintf(buffer, "%.3f", getOrientationUpY());
+        snprintf(buffer, sizeof(buffer), "%.3f", getOrientationUpY());
         break;
     // Up Z
     case 12:
-        sprintf(buffer, "%.3f", getOrientationUpZ());
+        snprintf(buffer, sizeof(buffer), "%.3f", getOrientationUpZ());
         break;
     default:
         break;
