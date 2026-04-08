@@ -334,13 +334,13 @@ void oas::Server::_processMessage(const Message &message)
         // Will need to release all audio resources and then re-initialize them
         _audioHandler.release();
         // If for some reason initialization fails, try again
+        delay = 5;
         while (!_audioHandler.initialize(getServerInfo()->getAudioDeviceString()))
         {
             oas::Logger::errorf(
                 "Failed to reset audio resources. Trying again in %d seconds.",
                 delay);
             sleep(delay);
-            delay += 5;
         }
         break;
     default:
