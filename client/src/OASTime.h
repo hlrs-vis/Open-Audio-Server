@@ -7,7 +7,6 @@
 #ifndef _OAS_TIME_H_
 #define _OAS_TIME_H_
 
-#include <_time.h>
 #include <time.h>
 
 namespace oasclient
