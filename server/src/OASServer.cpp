@@ -561,6 +561,16 @@ void *oas::Server::runServerNoGUI(void *parameter)
 // Main
 int main(int argc, char **argv)
 {
+    if (argc > 1)
+    {
+        std::string arg(argv[1]);
+        if (arg == "--help" || arg == "--version")
+        {
+            std::cout << "OpenAL Audio Server" << std::endl;
+            return 0;
+        }
+    }
+
     oas::Logger::logf("Starting up the OpenAL Audio Server...");
 
     oas::Server &server = oas::Server::getInstance();
