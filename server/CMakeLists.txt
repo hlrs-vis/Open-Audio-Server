@@ -30,7 +30,7 @@ OPTION(BUILD_GUI "Look for FLTK library, to build GUI components of server" ON)
 OPTION(TOML_CONFIG "Use TOML instead of XML configuration file" ON)
 
 # Find relevant packages
-FIND_PACKAGE(OPENAL REQUIRED)
+FIND_PACKAGE(OpenAL REQUIRED)
 FIND_PACKAGE(ALUT REQUIRED)
 
 # Find FLTK only if we need to
